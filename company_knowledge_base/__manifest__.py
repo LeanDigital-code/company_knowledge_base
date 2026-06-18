@@ -34,7 +34,7 @@ Compatible with Odoo 18 Community.
 """,
     'version': '1.0',
     'category': 'Productivity/Knowledge',
-    'author': 'Filippo Coiro',
+    'author': 'Lean Digital Studio',
     'website': 'https://wwww,leandigitalstudio.it',
     'license': 'OPL-1',
     'depends': ['base', 'mail', 'web'],
