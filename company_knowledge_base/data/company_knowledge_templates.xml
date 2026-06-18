@@ -1,0 +1,131 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="template_procedura_operativa" model="company.knowledge.template">
+        <field name="name">Procedura operativa</field>
+        <field name="sequence">10</field>
+        <field name="article_type">procedure</field>
+        <field name="category_id" ref="category_procedure"/>
+        <field name="tag_ids" eval="[(6, 0, [ref('tag_processi')])]"/>
+        <field name="summary">Sintesi della procedura, obiettivo e ambito di applicazione.</field>
+        <field name="quality_check_enabled" eval="True"/>
+        <field name="min_body_length">250</field>
+        <field name="requires_summary" eval="True"/>
+        <field name="requires_tags" eval="True"/>
+        <field name="required_section_keywords">Scopo
+Campo di applicazione
+Responsabilità
+Procedura
+Controlli</field>
+        <field name="body_html" type="html">
+            <h2>Scopo</h2>
+            <p>Descrivere lo scopo della procedura.</p>
+            <h2>Campo di applicazione</h2>
+            <p>Indicare quando e per quali casi si applica.</p>
+            <h2>Responsabilità</h2>
+            <ul><li>Responsabile processo:</li><li>Operatori coinvolti:</li></ul>
+            <h2>Procedura</h2>
+            <ol><li>Step 1</li><li>Step 2</li><li>Step 3</li></ol>
+            <h2>Controlli</h2>
+            <p>Indicare controlli, verifiche e output attesi.</p>
+        </field>
+    </record>
+
+    <record id="template_faq" model="company.knowledge.template">
+        <field name="name">FAQ</field>
+        <field name="sequence">20</field>
+        <field name="article_type">faq</field>
+        <field name="category_id" ref="category_faq"/>
+        <field name="summary">Domanda frequente e risposta sintetica.</field>
+        <field name="quality_check_enabled" eval="True"/>
+        <field name="min_body_length">120</field>
+        <field name="requires_summary" eval="True"/>
+        <field name="required_section_keywords">Domanda
+Risposta breve
+Dettagli</field>
+        <field name="body_html" type="html">
+            <h2>Domanda</h2>
+            <p>Scrivere qui la domanda frequente.</p>
+            <h2>Risposta breve</h2>
+            <p>Scrivere qui la risposta operativa.</p>
+            <h2>Dettagli</h2>
+            <p>Aggiungere note, esempi o riferimenti collegati.</p>
+        </field>
+    </record>
+
+    <record id="template_guida_tecnica" model="company.knowledge.template">
+        <field name="name">Guida tecnica</field>
+        <field name="sequence">30</field>
+        <field name="article_type">technical_guide</field>
+        <field name="category_id" ref="category_technical_guides"/>
+        <field name="tag_ids" eval="[(6, 0, [ref('tag_it')])]"/>
+        <field name="summary">Guida tecnica con prerequisiti, passaggi e troubleshooting.</field>
+        <field name="quality_check_enabled" eval="True"/>
+        <field name="min_body_length">220</field>
+        <field name="requires_summary" eval="True"/>
+        <field name="requires_tags" eval="True"/>
+        <field name="required_section_keywords">Obiettivo
+Prerequisiti
+Procedura
+Errori comuni</field>
+        <field name="body_html" type="html">
+            <h2>Obiettivo</h2>
+            <p>Descrivere cosa permette di fare la guida.</p>
+            <h2>Prerequisiti</h2>
+            <ul><li>Accessi necessari</li><li>Strumenti necessari</li></ul>
+            <h2>Procedura</h2>
+            <ol><li>Passaggio 1</li><li>Passaggio 2</li></ol>
+            <h2>Errori comuni</h2>
+            <p>Inserire errori frequenti e soluzioni.</p>
+        </field>
+    </record>
+
+    <record id="template_policy_aziendale" model="company.knowledge.template">
+        <field name="name">Policy aziendale</field>
+        <field name="sequence">40</field>
+        <field name="article_type">policy</field>
+        <field name="category_id" ref="category_policy"/>
+        <field name="summary">Policy interna con destinatari, regole e responsabilità.</field>
+        <field name="quality_check_enabled" eval="True"/>
+        <field name="min_body_length">220</field>
+        <field name="requires_summary" eval="True"/>
+        <field name="required_section_keywords">Oggetto
+Destinatari
+Regole
+Responsabilità
+Validità e revisione</field>
+        <field name="body_html" type="html">
+            <h2>Oggetto</h2>
+            <p>Descrivere l’oggetto della policy.</p>
+            <h2>Destinatari</h2>
+            <p>Indicare a chi si applica.</p>
+            <h2>Regole</h2>
+            <ul><li>Regola 1</li><li>Regola 2</li></ul>
+            <h2>Responsabilità</h2>
+            <p>Indicare ruoli e responsabilità.</p>
+            <h2>Validità e revisione</h2>
+            <p>Indicare data di validità e frequenza di revisione.</p>
+        </field>
+    </record>
+
+    <record id="template_checklist" model="company.knowledge.template">
+        <field name="name">Checklist</field>
+        <field name="sequence">50</field>
+        <field name="article_type">checklist</field>
+        <field name="category_id" ref="category_procedure"/>
+        <field name="summary">Checklist operativa per controlli ricorrenti.</field>
+        <field name="quality_check_enabled" eval="True"/>
+        <field name="min_body_length">140</field>
+        <field name="requires_summary" eval="True"/>
+        <field name="required_section_keywords">Obiettivo checklist
+Checklist
+Esito</field>
+        <field name="body_html" type="html">
+            <h2>Obiettivo checklist</h2>
+            <p>Descrivere il controllo o processo da verificare.</p>
+            <h2>Checklist</h2>
+            <ul><li>[ ] Attività 1</li><li>[ ] Attività 2</li><li>[ ] Attività 3</li></ul>
+            <h2>Esito</h2>
+            <p>Indicare cosa fare in caso di esito positivo o negativo.</p>
+        </field>
+    </record>
+</odoo>

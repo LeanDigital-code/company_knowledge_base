@@ -1,0 +1,117 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8"/>
+    <title>Company Knowledge Base Pro</title>
+    <style>
+        body { font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Arial, sans-serif; color: #1f2933; margin: 0; background: #fff; }
+        .ckb-wrap { max-width: 1120px; margin: 0 auto; padding: 32px 24px 64px; }
+        .hero { background: linear-gradient(135deg, #f8f1f6 0%, #ffffff 60%); border: 1px solid #eadce7; border-radius: 28px; padding: 48px; display: grid; grid-template-columns: 1.1fr .9fr; gap: 32px; align-items: center; }
+        .eyebrow { color: #714b67; font-weight: 800; text-transform: uppercase; letter-spacing: .08em; font-size: 13px; }
+        h1 { font-size: 46px; line-height: 1.05; margin: 12px 0 18px; color: #111827; }
+        .lead { font-size: 18px; line-height: 1.65; color: #64748b; margin-bottom: 28px; }
+        .pill-row { display: flex; flex-wrap: wrap; gap: 10px; }
+        .pill { background: #fff; border: 1px solid #eadce7; color: #714b67; padding: 9px 14px; border-radius: 999px; font-weight: 700; }
+        .hero-card { background: #fff; border: 1px solid #e5e7eb; box-shadow: 0 18px 60px rgba(31, 41, 51, .08); border-radius: 24px; padding: 24px; }
+        .metric-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 14px; }
+        .metric { background: #f8fafc; border: 1px solid #e5e7eb; border-radius: 16px; padding: 18px; }
+        .metric strong { display: block; font-size: 30px; color: #714b67; }
+        .metric span { color: #64748b; font-weight: 700; }
+        .section { margin-top: 52px; }
+        h2 { font-size: 31px; margin: 0 0 16px; }
+        .features { display: grid; grid-template-columns: repeat(3, 1fr); gap: 18px; }
+        .feature { border: 1px solid #e5e7eb; border-radius: 20px; padding: 22px; background: #fff; }
+        .feature h3 { margin: 0 0 10px; color: #714b67; font-size: 18px; }
+        .feature p { margin: 0; color: #64748b; line-height: 1.55; }
+        .screens { display: grid; grid-template-columns: repeat(2, 1fr); gap: 22px; }
+        .screen { border: 1px solid #e5e7eb; border-radius: 22px; overflow: hidden; background: #f8fafc; }
+        .screen img { width: 100%; display: block; }
+        .screen div { padding: 16px 18px; font-weight: 800; color: #334155; }
+        .list { display: grid; grid-template-columns: repeat(2, 1fr); gap: 10px 24px; color: #475569; }
+        .list li { margin-bottom: 8px; }
+        .cta { background: #714b67; color: white; border-radius: 24px; padding: 34px; display: flex; justify-content: space-between; align-items: center; gap: 24px; }
+        .cta h2 { color: #fff; margin-bottom: 8px; }
+        .cta p { margin: 0; color: #f7e9f2; }
+        @media (max-width: 900px) {
+            .hero, .features, .screens, .list { grid-template-columns: 1fr; }
+            h1 { font-size: 36px; }
+        }
+    </style>
+</head>
+<body>
+<div class="ckb-wrap">
+    <section class="hero">
+        <div>
+            <div class="eyebrow">Odoo 18 Community</div>
+            <h1>Company Knowledge Base Pro</h1>
+            <p class="lead">
+                Centralize company procedures, policies, FAQs and technical guides in Odoo with approval workflow,
+                versioning, portal publishing, quality checks and a smart navigation dashboard.
+            </p>
+            <div class="pill-row">
+                <span class="pill">Workflow</span>
+                <span class="pill">Versioning</span>
+                <span class="pill">Portal</span>
+                <span class="pill">Dashboard</span>
+                <span class="pill">Quality Checks</span>
+            </div>
+        </div>
+        <div class="hero-card">
+            <div class="metric-grid">
+                <div class="metric"><strong>100%</strong><span>Odoo backend</span></div>
+                <div class="metric"><strong>4</strong><span>User roles</span></div>
+                <div class="metric"><strong>PDF</strong><span>Article reports</span></div>
+                <div class="metric"><strong>CSV</strong><span>Import/export</span></div>
+            </div>
+        </div>
+    </section>
+
+    <section class="section">
+        <h2>What you can do</h2>
+        <div class="features">
+            <div class="feature"><h3>Manage company knowledge</h3><p>Create structured articles with categories, tags, templates, attachments and rich HTML content.</p></div>
+            <div class="feature"><h3>Control approvals</h3><p>Use draft, review, approval, publication, obsolete and archive states with workflow logs.</p></div>
+            <div class="feature"><h3>Track versions</h3><p>Keep article versions, compare previous content and restore older versions when needed.</p></div>
+            <div class="feature"><h3>Improve content quality</h3><p>Apply template-based quality rules, minimum score checks and quality dashboards.</p></div>
+            <div class="feature"><h3>Navigate faster</h3><p>Use a smart dashboard with sidebar navigation, search, filters, sorting and visual metrics.</p></div>
+            <div class="feature"><h3>Publish externally</h3><p>Publish selected articles to a public portal with controlled visibility and related articles.</p></div>
+        </div>
+    </section>
+
+    <section class="section">
+        <h2>Screenshots</h2>
+        <div class="screens">
+            <div class="screen"><img src="screenshot_dashboard.png" alt="Dashboard"/><div>Smart dashboard with sidebar navigation</div></div>
+            <div class="screen"><img src="screenshot_article.png" alt="Article management"/><div>Structured article management</div></div>
+            <div class="screen"><img src="screenshot_workflow.png" alt="Workflow"/><div>Approval workflow and governance</div></div>
+            <div class="screen"><img src="screenshot_portal.png" alt="Portal"/><div>Portal publishing</div></div>
+        </div>
+    </section>
+
+    <section class="section">
+        <h2>Main features</h2>
+        <ul class="list">
+            <li>Knowledge articles, categories, subcategories and tags</li>
+            <li>Article templates and quality rules</li>
+            <li>Approval workflow with workflow history</li>
+            <li>Version history, comparison and restore</li>
+            <li>Favorites, reading history and reading acknowledgements</li>
+            <li>Feedback, severity, activities and resolution tracking</li>
+            <li>Attachments and article PDF reports</li>
+            <li>Related articles and article suggestions</li>
+            <li>Portal/public publishing</li>
+            <li>Group, user and area based visibility</li>
+            <li>CSV import and CSV/HTML/PDF export</li>
+            <li>Dashboard with advanced search, filters and sorting</li>
+        </ul>
+    </section>
+
+    <section class="section cta">
+        <div>
+            <h2>Built for Odoo 18 Community</h2>
+            <p>Install the module, configure security groups, create categories and start building your internal knowledge hub.</p>
+        </div>
+    </section>
+</div>
+</body>
+</html>

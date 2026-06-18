@@ -1,0 +1,586 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="view_company_knowledge_article_list" model="ir.ui.view">
+        <field name="name">company.knowledge.article.list</field>
+        <field name="model">company.knowledge.article</field>
+        <field name="arch" type="xml">
+            <list string="Articoli Knowledge Base" decoration-success="state == 'published'" decoration-warning="state in ['review', 'changes_requested']" decoration-danger="is_review_due or state == 'obsolete'" decoration-muted="state == 'archived'">
+                <field name="priority" widget="priority"/>
+                <field name="name"/>
+                <field name="category_id"/>
+                <field name="area_id"/>
+                <field name="article_type"/>
+                <field name="template_id"/>
+                <field name="tag_ids" widget="many2many_tags" optional="show"/>
+                <field name="author_id" optional="hide"/>
+                <field name="owner_id" optional="show"/>
+                <field name="state" widget="badge" decoration-success="state == 'published'" decoration-warning="state in ['review', 'changes_requested']" decoration-danger="state in ['obsolete', 'archived']"/>
+                <field name="visibility" optional="show"/>
+                <field name="portal_visible" optional="show"/>
+                <field name="version_number" optional="show"/>
+                <field name="review_date" optional="show"/>
+                <field name="is_review_due" optional="hide"/>
+                <field name="view_count" optional="show"/>
+                <field name="view_log_count" optional="hide"/>
+                <field name="favorite_count" optional="hide"/>
+                <field name="subscriber_count" optional="hide"/>
+                <field name="notification_count" optional="hide"/>
+                <field name="related_record_count" optional="hide"/>
+                <field name="article_link_count" optional="hide"/>
+                <field name="feedback_todo_count" optional="hide"/>
+                <field name="feedback_critical_count" optional="hide"/>
+                <field name="workflow_log_count" optional="hide"/>
+                <field name="acknowledgement_count" optional="hide"/>
+                <field name="requires_acknowledgement" optional="hide"/>
+                <field name="attachment_count" optional="hide"/>
+                <field name="last_viewed_by_me_on" optional="hide"/>
+                <field name="quality_score" optional="show"/>
+                <field name="quality_level" optional="hide"/>
+                <field name="quality_issue_count" optional="hide"/>
+                <field name="rating_avg" optional="hide"/>
+                <field name="published_date" optional="hide"/>
+                <field name="active" column_invisible="True"/>
+            </list>
+        </field>
+    </record>
+
+    <record id="view_company_knowledge_article_kanban" model="ir.ui.view">
+        <field name="name">company.knowledge.article.kanban</field>
+        <field name="model">company.knowledge.article</field>
+        <field name="arch" type="xml">
+            <kanban default_group_by="state" class="o_kanban_small_column">
+                <field name="name"/>
+                <field name="category_id"/>
+                <field name="area_id"/>
+                <field name="article_type"/>
+                <field name="template_id"/>
+                <field name="tag_ids"/>
+                <field name="state"/>
+                <field name="priority"/>
+                <field name="owner_id"/>
+                <field name="requires_acknowledgement"/>
+                <field name="allowed_user_ids"/>
+                <field name="allowed_area_ids"/>
+                <field name="portal_visible"/>
+                <field name="review_date"/>
+                <field name="is_review_due"/>
+                <field name="view_count"/>
+                <field name="favorite_count"/>
+                <field name="subscriber_count"/>
+                <field name="quality_score"/>
+                <field name="quality_level"/>
+                <field name="article_link_count"/>
+                <field name="feedback_todo_count"/>
+                <field name="feedback_critical_count"/>
+                <field name="is_favorite"/>
+                <field name="is_subscribed_by_me"/>
+                <templates>
+                    <t t-name="kanban-box">
+                        <div t-attf-class="oe_kanban_global_click o_kanban_record #{record.is_review_due.raw_value ? 'border border-danger' : ''}">
+                            <div class="o_kanban_record_top">
+                                <div class="o_kanban_record_headings">
+                                    <strong class="o_kanban_record_title">
+                                        <field name="name"/>
+                                    </strong>
+                                    <div class="text-muted small">
+                                        <field name="category_id"/>
+                                    </div>
+                                </div>
+                                <field name="priority" widget="priority"/>
+                            </div>
+                            <div class="mt-2">
+                                <field name="tag_ids" widget="many2many_tags"/>
+                            </div>
+                            <div class="o_kanban_record_bottom mt-2">
+                                <div class="oe_kanban_bottom_left">
+                                    <field name="state" widget="badge"/>
+                                </div>
+                                <div class="oe_kanban_bottom_right text-muted small">
+                                    <span title="Visualizzazioni"><i class="fa fa-eye"/> <field name="view_count"/></span>
+                                    <span title="Preferiti" class="ms-2"><i class="fa fa-star"/> <field name="favorite_count"/></span>
+                                    <span title="Utenti iscritti" class="ms-2"><i class="fa fa-bell"/> <field name="subscriber_count"/></span>
+                                    <span title="Qualità" class="ms-2"><i class="fa fa-check-circle"/> <field name="quality_score"/>%</span>
+                                    <span title="Articoli correlati" class="ms-2"><i class="fa fa-link"/> <field name="article_link_count"/></span>
+                                    <span title="Feedback aperti" class="ms-2" t-if="record.feedback_todo_count.raw_value"><i class="fa fa-comments-o"/> <field name="feedback_todo_count"/></span>
+                                    <span title="Feedback critici" class="ms-2 text-danger" t-if="record.feedback_critical_count.raw_value"><i class="fa fa-exclamation-triangle"/> <field name="feedback_critical_count"/></span>
+                                </div>
+                            </div>
+                            <div class="text-danger small mt-1" t-if="record.is_review_due.raw_value">
+                                Revisione scaduta
+                            </div>
+                        </div>
+                    </t>
+                </templates>
+            </kanban>
+        </field>
+    </record>
+
+    <record id="view_company_knowledge_article_form" model="ir.ui.view">
+        <field name="name">company.knowledge.article.form</field>
+        <field name="model">company.knowledge.article</field>
+        <field name="arch" type="xml">
+            <form string="Articolo Knowledge Base">
+                <header>
+                    <button name="action_send_review" type="object" string="Invia in revisione" class="oe_highlight" invisible="state not in ['draft', 'changes_requested']" groups="company_knowledge_base.group_company_knowledge_editor"/>
+                    <button name="action_open_request_changes_wizard" type="object" string="Richiedi modifiche" invisible="state != 'review'" groups="company_knowledge_base.group_company_knowledge_manager"/>
+                    <button name="action_approve" type="object" string="Approva" class="oe_highlight" invisible="state not in ['review', 'changes_requested']" groups="company_knowledge_base.group_company_knowledge_manager"/>
+                    <button name="action_publish" type="object" string="Pubblica" class="oe_highlight" invisible="state != 'approved'" groups="company_knowledge_base.group_company_knowledge_manager"/>
+                    <button name="action_new_revision" type="object" string="Nuova revisione" invisible="state not in ['published', 'obsolete']" groups="company_knowledge_base.group_company_knowledge_editor"/>
+                    <button name="action_mark_obsolete" type="object" string="Marca obsoleto" invisible="state != 'published'" groups="company_knowledge_base.group_company_knowledge_manager"/>
+                    <button name="action_archive_article" type="object" string="Archivia" invisible="state == 'archived'" groups="company_knowledge_base.group_company_knowledge_manager"/>
+                    <button name="action_reset_draft" type="object" string="Riporta in bozza" invisible="state == 'draft'" groups="company_knowledge_base.group_company_knowledge_editor"/>
+                    <button name="action_apply_template" type="object" string="Applica template" invisible="not template_id or state not in ['draft', 'changes_requested']" groups="company_knowledge_base.group_company_knowledge_editor"/>
+                    <button name="action_toggle_favorite" type="object" string="Preferito" icon="fa-star"/>
+                    <button name="action_toggle_subscription" type="object" string="Segui" icon="fa-bell"/>
+                    <button name="action_open_notify_wizard" type="object" string="Notifica utenti" icon="fa-envelope" invisible="state == 'draft'" groups="company_knowledge_base.group_company_knowledge_manager"/>
+                    <button name="action_acknowledge" type="object" string="Conferma lettura" class="oe_highlight" icon="fa-check" invisible="not requires_acknowledgement or is_acknowledged_by_me or state != 'published'"/>
+                    <button name="action_schedule_review_activity" type="object" string="Crea attività revisione" icon="fa-calendar-check-o" invisible="not review_date" groups="company_knowledge_base.group_company_knowledge_manager"/>
+                    <button name="action_open_compare_versions_wizard" type="object" string="Confronta versioni" icon="fa-code-fork" invisible="version_count &lt; 2"/>
+                    <button name="action_check_quality" type="object" string="Controlla qualità" icon="fa-check-circle"/>
+                    <button name="action_create_suggested_article_links" type="object" string="Collega suggeriti" icon="fa-magic" groups="company_knowledge_base.group_company_knowledge_editor"/>
+                    <button name="action_print_pdf" type="object" string="PDF" icon="fa-file-pdf-o" invisible="state == 'draft'"/>
+                    <button name="action_publish_portal" type="object" string="Pubblica su portale" icon="fa-globe" invisible="state != 'published' or visibility == 'portal'" groups="company_knowledge_base.group_company_knowledge_manager"/>
+                    <button name="action_unpublish_portal" type="object" string="Rimuovi da portale" icon="fa-chain-broken" invisible="visibility != 'portal'" groups="company_knowledge_base.group_company_knowledge_manager"/>
+                    <field name="state" widget="statusbar" statusbar_visible="draft,review,approved,published,obsolete"/>
+                </header>
+                <sheet>
+                    <div class="oe_button_box" name="button_box">
+                        <button name="action_register_view" type="object" class="oe_stat_button" icon="fa-eye">
+                            <field name="view_count" widget="statinfo" string="Letture"/>
+                        </button>
+                        <button name="action_open_versions" type="object" class="oe_stat_button" icon="fa-history">
+                            <field name="version_count" widget="statinfo" string="Versioni"/>
+                        </button>
+                        <button name="action_open_compare_versions_wizard" type="object" class="oe_stat_button" icon="fa-code-fork" invisible="version_count &lt; 2">
+                            <field name="version_count" widget="statinfo" string="Confronto"/>
+                        </button>
+                        <button name="action_open_feedback" type="object" class="oe_stat_button" icon="fa-comments-o">
+                            <field name="feedback_count" widget="statinfo" string="Feedback"/>
+                        </button>
+                        <button name="action_open_feedback" type="object" class="oe_stat_button" icon="fa-exclamation-triangle" invisible="feedback_todo_count == 0">
+                            <field name="feedback_todo_count" widget="statinfo" string="Feedback aperti"/>
+                        </button>
+                        <button name="action_open_favorites" type="object" class="oe_stat_button" icon="fa-star">
+                            <field name="favorite_count" widget="statinfo" string="Preferiti"/>
+                        </button>
+                        <button name="action_open_subscriptions" type="object" class="oe_stat_button" icon="fa-bell">
+                            <field name="subscriber_count" widget="statinfo" string="Iscritti"/>
+                        </button>
+                        <button name="action_open_notification_logs" type="object" class="oe_stat_button" icon="fa-envelope">
+                            <field name="notification_count" widget="statinfo" string="Notifiche"/>
+                        </button>
+                        <button name="action_open_view_logs" type="object" class="oe_stat_button" icon="fa-users">
+                            <field name="view_log_count" widget="statinfo" string="Lettori"/>
+                        </button>
+                        <button name="action_open_related_records" type="object" class="oe_stat_button" icon="fa-link">
+                            <field name="related_record_count" widget="statinfo" string="Collegamenti"/>
+                        </button>
+                        <button name="action_open_suggested_articles" type="object" class="oe_stat_button" icon="fa-lightbulb-o">
+                            <span class="o_stat_text">Suggeriti</span>
+                        </button>
+                        <button name="action_open_article_links" type="object" class="oe_stat_button" icon="fa-chain">
+                            <field name="article_link_count" widget="statinfo" string="Articoli correlati"/>
+                        </button>
+                        <button name="action_open_workflow_logs" type="object" class="oe_stat_button" icon="fa-random">
+                            <field name="workflow_log_count" widget="statinfo" string="Workflow"/>
+                        </button>
+                        <button name="action_open_acknowledgements" type="object" class="oe_stat_button" icon="fa-check-square-o">
+                            <field name="acknowledgement_count" widget="statinfo" string="Conferme"/>
+                        </button>
+                    </div>
+                    <field name="is_favorite" invisible="1"/>
+                    <field name="is_subscribed_by_me" invisible="1"/>
+                    <field name="is_acknowledged_by_me" invisible="1"/>
+                    <field name="acknowledged_by_me_on" invisible="1"/>
+                    <field name="quality_level" invisible="1"/>
+                    <widget name="web_ribbon" title="Da revisionare" bg_color="text-bg-danger" invisible="not is_review_due"/>
+                    <widget name="web_ribbon" title="Obsoleto" bg_color="text-bg-warning" invisible="state != 'obsolete'"/>
+                    <div class="oe_title">
+                        <label for="name"/>
+                        <h1><field name="name" placeholder="Titolo dell’articolo..."/></h1>
+                    </div>
+                    <group>
+                        <group>
+                            <field name="category_id"/>
+                            <field name="area_id"/>
+                            <field name="article_type"/>
+                            <field name="template_id" options="{'no_create_edit': True}"/>
+                            <field name="tag_ids" widget="many2many_tags" options="{'color_field': 'color'}"/>
+                            <field name="priority" widget="priority"/>
+                            <field name="requires_acknowledgement"/>
+                        </group>
+                        <group>
+                            <field name="author_id" readonly="1"/>
+                            <field name="owner_id"/>
+                            <field name="review_date"/>
+                            <field name="last_viewed_by_me_on" readonly="1"/>
+                            <field name="acknowledged_by_me_on" readonly="1" invisible="not requires_acknowledgement"/>
+                        </group>
+                    </group>
+                    <group string="Visibilità">
+                        <group>
+                            <field name="visibility"/>
+                            <field name="allowed_group_ids" widget="many2many_tags" invisible="visibility != 'groups'"/>
+                            <field name="allowed_user_ids" widget="many2many_tags" invisible="visibility != 'users'"/>
+                            <field name="allowed_area_ids" widget="many2many_tags" invisible="visibility != 'areas'"/>
+                            <field name="portal_visible" readonly="1"/>
+                            <field name="portal_url" readonly="1" invisible="not portal_visible"/>
+                        </group>
+                        <group>
+                            <field name="version_number" readonly="1"/>
+                            <field name="published_date" readonly="1"/>
+                            <field name="approved_date" readonly="1"/>
+                            <field name="approver_id" readonly="1"/>
+                        </group>
+                    </group>
+                    <group string="Qualità contenuto">
+                        <group>
+                            <field name="quality_score" readonly="1"/>
+                            <field name="quality_level" readonly="1"/>
+                            <field name="quality_issue_count" readonly="1"/>
+                        </group>
+                        <group>
+                            <field name="quality_issue_summary" readonly="1" nolabel="1"/>
+                        </group>
+                    </group>
+                    <notebook>
+                        <page string="Contenuto">
+                            <group>
+                                <field name="summary" placeholder="Sintesi rapida dell’articolo..."/>
+                            </group>
+                            <field name="body_html" widget="html" placeholder="Scrivi qui procedura, guida, FAQ o policy..."/>
+                        </page>
+                        <page string="Allegati">
+                            <field name="attachment_ids" widget="many2many_binary" string="Allegati"/>
+                        </page>
+                        <page string="Workflow">
+                            <field name="workflow_log_ids" readonly="1" context="{'default_article_id': id}">
+                                <list>
+                                    <field name="date"/>
+                                    <field name="action"/>
+                                    <field name="from_state"/>
+                                    <field name="to_state"/>
+                                    <field name="user_id"/>
+                                    <field name="note" optional="show"/>
+                                </list>
+                            </field>
+                        </page>
+                        <page string="Versioni">
+                            <field name="version_ids" readonly="1" context="{'default_article_id': id}">
+                                <list>
+                                    <field name="create_date" string="Data"/>
+                                    <field name="version_number"/>
+                                    <field name="title"/>
+                                    <field name="article_type"/>
+                                    <field name="template_id"/>
+                                    <field name="snapshot_state_value"/>
+                                    <field name="created_by_id"/>
+                                    <field name="change_note"/>
+                                </list>
+                            </field>
+                        </page>
+                        <page string="Feedback">
+                            <button name="action_create_feedback" type="object" string="Lascia feedback" class="oe_highlight"/>
+                            <field name="feedback_ids" readonly="1" context="{'default_article_id': id}">
+                                <list>
+                                    <field name="create_date" string="Data"/>
+                                    <field name="user_id"/>
+                                    <field name="feedback_type"/>
+                                    <field name="rating"/>
+                                    <field name="state"/>
+                                </list>
+                            </field>
+                        </page>
+                        <page string="Collegamenti record">
+                            <field name="related_record_ids" context="{'default_article_id': id}">
+                                <list editable="bottom">
+                                    <field name="model_id" options="{'no_create_edit': True}"/>
+                                    <field name="res_id"/>
+                                    <field name="record_display_name" readonly="1"/>
+                                    <field name="note"/>
+                                </list>
+                            </field>
+                        </page>
+                        <page string="Articoli correlati">
+                            <button name="action_create_suggested_article_links" type="object" string="Collega suggeriti" class="oe_highlight" groups="company_knowledge_base.group_company_knowledge_editor"/>
+                            <field name="related_article_link_ids" context="{'default_article_id': id}">
+                                <list editable="bottom">
+                                    <field name="sequence" widget="handle"/>
+                                    <field name="relation_type"/>
+                                    <field name="related_article_id" domain="[('id', '!=', parent.id)]"/>
+                                    <field name="related_state" widget="badge" readonly="1"/>
+                                    <field name="related_category_id" readonly="1" optional="show"/>
+                                    <field name="note" optional="show"/>
+                                    <button name="action_open_related_article" type="object" string="Apri" icon="fa-external-link"/>
+                                </list>
+                            </field>
+                            <separator string="Citato da altri articoli"/>
+                            <field name="incoming_article_link_ids" readonly="1">
+                                <list>
+                                    <field name="article_id"/>
+                                    <field name="relation_type"/>
+                                    <field name="related_state" widget="badge"/>
+                                    <field name="note"/>
+                                </list>
+                            </field>
+                        </page>
+                        <page string="Conferme lettura" invisible="not requires_acknowledgement">
+                            <field name="acknowledgement_ids" readonly="1" context="{'default_article_id': id}">
+                                <list>
+                                    <field name="acknowledged_on"/>
+                                    <field name="user_id"/>
+                                    <field name="note"/>
+                                </list>
+                            </field>
+                        </page>
+                        <page string="Letture">
+                            <field name="view_log_ids" readonly="1" context="{'default_article_id': id}">
+                                <list>
+                                    <field name="last_viewed_on"/>
+                                    <field name="user_id"/>
+                                    <field name="view_count"/>
+                                </list>
+                            </field>
+                        </page>
+                        <page string="Utenti iscritti">
+                            <field name="subscription_ids" context="{'default_article_id': id}">
+                                <list editable="bottom">
+                                    <field name="user_id"/>
+                                    <field name="notification_level"/>
+                                    <field name="subscribed_on" readonly="1"/>
+                                    <field name="last_notified_on" readonly="1"/>
+                                    <field name="active"/>
+                                </list>
+                            </field>
+                        </page>
+                        <page string="Notifiche inviate" groups="company_knowledge_base.group_company_knowledge_manager">
+                            <field name="notification_log_ids" readonly="1" context="{'default_article_id': id}">
+                                <list>
+                                    <field name="sent_on"/>
+                                    <field name="notification_type"/>
+                                    <field name="user_id"/>
+                                    <field name="sent_by_id"/>
+                                    <field name="activity_created"/>
+                                </list>
+                            </field>
+                        </page>
+                    </notebook>
+                </sheet>
+                <chatter>
+                    <field name="message_follower_ids" widget="mail_followers"/>
+                    <field name="activity_ids" widget="mail_activity"/>
+                    <field name="message_ids" widget="mail_thread"/>
+                </chatter>
+            </form>
+        </field>
+    </record>
+
+    <record id="view_company_knowledge_article_search" model="ir.ui.view">
+        <field name="name">company.knowledge.article.search</field>
+        <field name="model">company.knowledge.article</field>
+        <field name="arch" type="xml">
+            <search string="Cerca articoli">
+                <field name="name" string="Titolo"/>
+                <field name="summary"/>
+                <field name="body_html" string="Contenuto"/>
+                <field name="category_id"/>
+                <field name="area_id"/>
+                <field name="article_type"/>
+                <field name="template_id"/>
+                <field name="tag_ids"/>
+                <field name="author_id"/>
+                <field name="owner_id"/>
+                <field name="requires_acknowledgement"/>
+                <field name="allowed_user_ids"/>
+                <field name="allowed_area_ids"/>
+                <field name="portal_visible"/>
+                <field name="subscription_ids"/>
+                <filter string="I miei articoli" name="my_articles" domain="['|', ('author_id', '=', uid), ('owner_id', '=', uid)]"/>
+                <filter string="Nei miei preferiti" name="my_favorites" domain="[('favorite_ids.user_id', '=', uid)]"/>
+                <filter string="Seguiti da me" name="my_subscribed" domain="[('subscription_ids.user_id', '=', uid), ('subscription_ids.active', '=', True)]"/>
+                <filter string="Letti da me" name="viewed_by_me" domain="[('view_log_ids.user_id', '=', uid)]"/>
+                <filter string="Con collegamenti" name="with_related_records" domain="[('related_record_ids', '!=', False)]"/>
+                <filter string="Richiede conferma" name="requires_acknowledgement" domain="[('requires_acknowledgement', '=', True)]"/>
+                <filter string="Qualità bassa" name="low_quality" domain="[('quality_score', '&lt;', 70)]"/>
+                <filter string="Feedback aperti" name="feedback_todo" domain="[('feedback_ids.state', '=', 'todo')]"/>
+                <filter string="Feedback critici" name="feedback_critical" domain="[('feedback_ids.state', '=', 'todo'), '|', ('feedback_ids.severity', 'in', ['high', 'critical']), ('feedback_ids.feedback_type', 'in', ['error', 'obsolete', 'missing'])]"/>
+                <filter string="Qualità ottima" name="excellent_quality" domain="[('quality_level', '=', 'excellent')]"/>
+                <filter string="Con allegati" name="with_attachments" domain="[('attachment_ids', '!=', False)]"/>
+                <filter string="Pubblicati" name="published" domain="[('state', '=', 'published')]"/>
+                <filter string="In revisione" name="review" domain="[('state', '=', 'review')]"/>
+                <filter string="Da modificare" name="changes_requested" domain="[('state', '=', 'changes_requested')]"/>
+                <filter string="Da revisionare" name="review_due" domain="[('is_review_due', '=', True)]"/>
+                <filter string="Obsoleti" name="obsolete" domain="[('state', '=', 'obsolete')]"/>
+                <filter string="Riservati a gruppi" name="restricted_groups" domain="[('visibility', '=', 'groups')]"/>
+                <filter string="Riservati a utenti" name="restricted_users" domain="[('visibility', '=', 'users')]"/>
+                <filter string="Riservati ad aree" name="restricted_areas" domain="[('visibility', '=', 'areas')]"/>
+                <filter string="Pubblicati su portale" name="portal_visible" domain="[('portal_visible', '=', True)]"/>
+                <filter string="Con articoli correlati" name="with_article_links" domain="[('related_article_link_ids', '!=', False)]"/>
+                <filter string="Archiviati" name="archived" domain="[('active', '=', False)]"/>
+                <separator/>
+                <filter string="Creati questo mese" name="created_this_month" domain="[('create_date', '&gt;=', context_today().strftime('%Y-%m-01'))]"/>
+                <group expand="0" string="Raggruppa per">
+                    <filter string="Stato" name="group_state" context="{'group_by': 'state'}"/>
+                    <filter string="Categoria" name="group_category" context="{'group_by': 'category_id'}"/>
+                    <filter string="Area/Reparto" name="group_area" context="{'group_by': 'area_id'}"/>
+                    <filter string="Tipo articolo" name="group_article_type" context="{'group_by': 'article_type'}"/>
+                    <filter string="Template" name="group_template" context="{'group_by': 'template_id'}"/>
+                    <filter string="Autore" name="group_author" context="{'group_by': 'author_id'}"/>
+                    <filter string="Responsabile" name="group_owner" context="{'group_by': 'owner_id'}"/>
+                    <filter string="Visibilità" name="group_visibility" context="{'group_by': 'visibility'}"/>
+                    <filter string="Mese pubblicazione" name="group_published_month" context="{'group_by': 'published_date:month'}"/>
+                    <filter string="Conferma lettura" name="group_requires_ack" context="{'group_by': 'requires_acknowledgement'}"/>
+                    <filter string="Qualità" name="group_quality_level" context="{'group_by': 'quality_level'}"/>
+                </group>
+            </search>
+        </field>
+    </record>
+
+    <record id="view_company_knowledge_article_pivot" model="ir.ui.view">
+        <field name="name">company.knowledge.article.pivot</field>
+        <field name="model">company.knowledge.article</field>
+        <field name="arch" type="xml">
+            <pivot string="Analisi Knowledge Base">
+                <field name="category_id" type="row"/>
+                <field name="area_id" type="row"/>
+                <field name="article_type" type="row"/>
+                <field name="state" type="col"/>
+                <field name="quality_level" type="col"/>
+                <field name="view_count" type="measure"/>
+                <field name="quality_score" type="measure"/>
+            </pivot>
+        </field>
+    </record>
+
+    <record id="view_company_knowledge_article_graph" model="ir.ui.view">
+        <field name="name">company.knowledge.article.graph</field>
+        <field name="model">company.knowledge.article</field>
+        <field name="arch" type="xml">
+            <graph string="Articoli per stato" type="bar">
+                <field name="state"/>
+                <field name="view_count" type="measure"/>
+            </graph>
+        </field>
+    </record>
+
+    <record id="action_company_knowledge_article" model="ir.actions.act_window">
+        <field name="name">Articoli</field>
+        <field name="res_model">company.knowledge.article</field>
+        <field name="view_mode">kanban,list,form,pivot,graph</field>
+        <field name="search_view_id" ref="view_company_knowledge_article_search"/>
+        <field name="context">{'search_default_group_state': 1}</field>
+    </record>
+
+    <record id="action_company_knowledge_article_all" model="ir.actions.act_window">
+        <field name="name">Tutti gli articoli</field>
+        <field name="res_model">company.knowledge.article</field>
+        <field name="view_mode">list,kanban,form,pivot,graph</field>
+        <field name="search_view_id" ref="view_company_knowledge_article_search"/>
+    </record>
+
+
+
+    <record id="action_company_knowledge_article_favorites" model="ir.actions.act_window">
+        <field name="name">Articoli preferiti</field>
+        <field name="res_model">company.knowledge.article</field>
+        <field name="view_mode">list,kanban,form</field>
+        <field name="domain">[('favorite_ids.user_id', '=', uid)]</field>
+        <field name="search_view_id" ref="view_company_knowledge_article_search"/>
+    </record>
+
+    <record id="action_company_knowledge_article_viewed_by_me" model="ir.actions.act_window">
+        <field name="name">Articoli letti da me</field>
+        <field name="res_model">company.knowledge.article</field>
+        <field name="view_mode">list,kanban,form</field>
+        <field name="domain">[('view_log_ids.user_id', '=', uid)]</field>
+        <field name="search_view_id" ref="view_company_knowledge_article_search"/>
+    </record>
+
+
+    <record id="action_company_knowledge_article_ack_required" model="ir.actions.act_window">
+        <field name="name">Da confermare</field>
+        <field name="res_model">company.knowledge.article</field>
+        <field name="view_mode">list,kanban,form</field>
+        <field name="domain">[('requires_acknowledgement', '=', True), ('state', '=', 'published')]</field>
+        <field name="search_view_id" ref="view_company_knowledge_article_search"/>
+    </record>
+
+
+
+    <record id="action_company_knowledge_article_subscribed_by_me" model="ir.actions.act_window">
+        <field name="name">Articoli seguiti da me</field>
+        <field name="res_model">company.knowledge.article</field>
+        <field name="view_mode">list,kanban,form</field>
+        <field name="domain">[('subscription_ids.user_id', '=', uid), ('subscription_ids.active', '=', True)]</field>
+        <field name="search_view_id" ref="view_company_knowledge_article_search"/>
+    </record>
+
+    <record id="action_company_knowledge_article_my" model="ir.actions.act_window">
+        <field name="name">I miei articoli</field>
+        <field name="res_model">company.knowledge.article</field>
+        <field name="view_mode">list,kanban,form</field>
+        <field name="domain">['|', ('author_id', '=', uid), ('owner_id', '=', uid)]</field>
+        <field name="search_view_id" ref="view_company_knowledge_article_search"/>
+    </record>
+
+    <record id="action_company_knowledge_article_review" model="ir.actions.act_window">
+        <field name="name">Da revisionare / approvare</field>
+        <field name="res_model">company.knowledge.article</field>
+        <field name="view_mode">list,kanban,form</field>
+        <field name="domain">[('state', 'in', ['review', 'changes_requested'])]</field>
+        <field name="search_view_id" ref="view_company_knowledge_article_search"/>
+        <field name="context">{'search_default_group_state': 1}</field>
+    </record>
+
+    <record id="action_company_knowledge_article_published" model="ir.actions.act_window">
+        <field name="name">Pubblicati</field>
+        <field name="res_model">company.knowledge.article</field>
+        <field name="view_mode">list,kanban,form,pivot,graph</field>
+        <field name="domain">[('state', '=', 'published')]</field>
+        <field name="search_view_id" ref="view_company_knowledge_article_search"/>
+    </record>
+
+    <record id="action_company_knowledge_article_review_due" model="ir.actions.act_window">
+        <field name="name">Scaduti / Da aggiornare</field>
+        <field name="res_model">company.knowledge.article</field>
+        <field name="view_mode">list,kanban,form</field>
+        <field name="domain">[('is_review_due', '=', True)]</field>
+        <field name="search_view_id" ref="view_company_knowledge_article_search"/>
+    </record>
+
+    <record id="action_company_knowledge_article_obsolete" model="ir.actions.act_window">
+        <field name="name">Obsoleti</field>
+        <field name="res_model">company.knowledge.article</field>
+        <field name="view_mode">list,kanban,form</field>
+        <field name="domain">[('state', '=', 'obsolete')]</field>
+        <field name="search_view_id" ref="view_company_knowledge_article_search"/>
+    </record>
+
+
+
+    <record id="action_company_knowledge_article_portal" model="ir.actions.act_window">
+        <field name="name">Articoli portale</field>
+        <field name="res_model">company.knowledge.article</field>
+        <field name="view_mode">list,kanban,form,pivot,graph</field>
+        <field name="domain">[('portal_visible', '=', True)]</field>
+        <field name="search_view_id" ref="view_company_knowledge_article_search"/>
+    </record>
+
+    <record id="action_company_knowledge_article_low_quality" model="ir.actions.act_window">
+        <field name="name">Qualità contenuti</field>
+        <field name="res_model">company.knowledge.article</field>
+        <field name="view_mode">list,kanban,form,pivot,graph</field>
+        <field name="domain">[('quality_score', '&lt;', 70)]</field>
+        <field name="search_view_id" ref="view_company_knowledge_article_search"/>
+        <field name="context">{'search_default_low_quality': 1, 'search_default_group_quality_level': 1}</field>
+    </record>
+
+    <record id="action_company_knowledge_article_archived" model="ir.actions.act_window">
+        <field name="name">Archiviati</field>
+        <field name="res_model">company.knowledge.article</field>
+        <field name="view_mode">list,form</field>
+        <field name="domain">[('active', '=', False)]</field>
+        <field name="search_view_id" ref="view_company_knowledge_article_search"/>
+        <field name="context">{'active_test': False}</field>
+    </record>
+</odoo>

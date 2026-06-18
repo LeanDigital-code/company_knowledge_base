@@ -1,0 +1,257 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <menuitem id="menu_company_knowledge_root"
+              name="Knowledge Base"
+              sequence="35"
+              groups="company_knowledge_base.group_company_knowledge_user"/>
+
+    <!-- DASHBOARDS -->
+    <menuitem id="menu_company_knowledge_dashboard_root"
+              name="Dashboard"
+              parent="menu_company_knowledge_root"
+              sequence="5"/>
+
+    <menuitem id="menu_company_knowledge_dashboard"
+              name="Dashboard operativa"
+              parent="menu_company_knowledge_dashboard_root"
+              action="action_company_knowledge_dashboard_sidebar"
+              sequence="10"/>
+
+    <menuitem id="menu_company_knowledge_dashboard_classic"
+              name="Dashboard classica"
+              parent="menu_company_knowledge_dashboard_root"
+              action="action_company_knowledge_article"
+              sequence="20"/>
+
+    <!-- ARTICLES -->
+    <menuitem id="menu_company_knowledge_articles_root"
+              name="Articoli"
+              parent="menu_company_knowledge_root"
+              sequence="10"/>
+
+    <menuitem id="menu_company_knowledge_articles_all"
+              name="Tutti gli articoli"
+              parent="menu_company_knowledge_articles_root"
+              action="action_company_knowledge_article_all"
+              sequence="10"/>
+
+    <menuitem id="menu_company_knowledge_articles_my"
+              name="I miei articoli"
+              parent="menu_company_knowledge_articles_root"
+              action="action_company_knowledge_article_my"
+              sequence="20"/>
+
+    <menuitem id="menu_company_knowledge_articles_published"
+              name="Pubblicati"
+              parent="menu_company_knowledge_articles_root"
+              action="action_company_knowledge_article_published"
+              sequence="30"/>
+
+    <menuitem id="menu_company_knowledge_articles_portal"
+              name="Portale"
+              parent="menu_company_knowledge_articles_root"
+              action="action_company_knowledge_article_portal"
+              sequence="40"/>
+
+    <menuitem id="menu_company_knowledge_articles_personal"
+              name="Personali"
+              parent="menu_company_knowledge_articles_root"
+              sequence="50"/>
+
+    <menuitem id="menu_company_knowledge_articles_favorites"
+              name="Articoli preferiti"
+              parent="menu_company_knowledge_articles_personal"
+              action="action_company_knowledge_article_favorites"
+              sequence="10"/>
+
+    <menuitem id="menu_company_knowledge_articles_subscribed"
+              name="Seguiti da me"
+              parent="menu_company_knowledge_articles_personal"
+              action="action_company_knowledge_article_subscribed_by_me"
+              sequence="20"/>
+
+    <menuitem id="menu_company_knowledge_articles_viewed_by_me"
+              name="Letti da me"
+              parent="menu_company_knowledge_articles_personal"
+              action="action_company_knowledge_article_viewed_by_me"
+              sequence="30"/>
+
+    <menuitem id="menu_company_knowledge_articles_ack_required"
+              name="Da confermare"
+              parent="menu_company_knowledge_articles_personal"
+              action="action_company_knowledge_article_ack_required"
+              sequence="40"/>
+
+    <menuitem id="menu_company_knowledge_subscriptions"
+              name="Iscrizioni articoli"
+              parent="menu_company_knowledge_articles_personal"
+              action="action_company_knowledge_subscription_my"
+              sequence="50"/>
+
+    <menuitem id="menu_company_knowledge_favorites"
+              name="Registro preferiti"
+              parent="menu_company_knowledge_articles_personal"
+              action="action_company_knowledge_favorite"
+              sequence="60"/>
+
+    <menuitem id="menu_company_knowledge_articles_workflow"
+              name="Workflow e revisione"
+              parent="menu_company_knowledge_articles_root"
+              sequence="60"
+              groups="company_knowledge_base.group_company_knowledge_editor"/>
+
+    <menuitem id="menu_company_knowledge_articles_review"
+              name="Da revisionare / approvare"
+              parent="menu_company_knowledge_articles_workflow"
+              action="action_company_knowledge_article_review"
+              sequence="10"/>
+
+    <menuitem id="menu_company_knowledge_articles_due"
+              name="Scaduti / Da aggiornare"
+              parent="menu_company_knowledge_articles_workflow"
+              action="action_company_knowledge_article_review_due"
+              sequence="20"/>
+
+    <menuitem id="menu_company_knowledge_articles_obsolete"
+              name="Obsoleti"
+              parent="menu_company_knowledge_articles_workflow"
+              action="action_company_knowledge_article_obsolete"
+              sequence="30"/>
+
+    <menuitem id="menu_company_knowledge_articles_archived"
+              name="Archiviati"
+              parent="menu_company_knowledge_articles_workflow"
+              action="action_company_knowledge_article_archived"
+              sequence="40"
+              groups="company_knowledge_base.group_company_knowledge_manager"/>
+
+    <!-- FEEDBACK -->
+    <menuitem id="menu_company_knowledge_feedback_root"
+              name="Feedback"
+              parent="menu_company_knowledge_root"
+              sequence="20"/>
+
+    <menuitem id="menu_company_knowledge_feedback"
+              name="Tutti i feedback"
+              parent="menu_company_knowledge_feedback_root"
+              action="action_company_knowledge_feedback"
+              sequence="10"/>
+
+    <menuitem id="menu_company_knowledge_feedback_critical"
+              name="Feedback critici"
+              parent="menu_company_knowledge_feedback_root"
+              action="action_company_knowledge_feedback_critical"
+              sequence="20"
+              groups="company_knowledge_base.group_company_knowledge_editor"/>
+
+    <!-- ANALYTICS -->
+    <menuitem id="menu_company_knowledge_analytics_root"
+              name="Analisi"
+              parent="menu_company_knowledge_root"
+              sequence="30"
+              groups="company_knowledge_base.group_company_knowledge_manager"/>
+
+    <menuitem id="menu_company_knowledge_view_logs"
+              name="Letture"
+              parent="menu_company_knowledge_analytics_root"
+              action="action_company_knowledge_view_log"
+              sequence="10"/>
+
+    <menuitem id="menu_company_knowledge_related_records"
+              name="Record collegati"
+              parent="menu_company_knowledge_analytics_root"
+              action="action_company_knowledge_article_related"
+              sequence="20"/>
+
+    <menuitem id="menu_company_knowledge_article_links"
+              name="Articoli correlati"
+              parent="menu_company_knowledge_analytics_root"
+              action="action_company_knowledge_article_link"
+              sequence="30"/>
+
+    <menuitem id="menu_company_knowledge_versions"
+              name="Versioni"
+              parent="menu_company_knowledge_analytics_root"
+              action="action_company_knowledge_article_version"
+              sequence="40"
+              groups="company_knowledge_base.group_company_knowledge_manager"/>
+
+    <menuitem id="menu_company_knowledge_workflow_logs"
+              name="Storico workflow"
+              parent="menu_company_knowledge_analytics_root"
+              action="action_company_knowledge_workflow_log"
+              sequence="50"/>
+
+    <menuitem id="menu_company_knowledge_acknowledgements"
+              name="Conferme lettura"
+              parent="menu_company_knowledge_analytics_root"
+              action="action_company_knowledge_acknowledgement"
+              sequence="60"/>
+
+    <menuitem id="menu_company_knowledge_subscriptions_analysis"
+              name="Iscrizioni"
+              parent="menu_company_knowledge_analytics_root"
+              action="action_company_knowledge_subscription"
+              sequence="70"/>
+
+    <menuitem id="menu_company_knowledge_notification_logs"
+              name="Notifiche inviate"
+              parent="menu_company_knowledge_analytics_root"
+              action="action_company_knowledge_notification_log"
+              sequence="80"/>
+
+    <menuitem id="menu_company_knowledge_quality"
+              name="Qualità contenuti"
+              parent="menu_company_knowledge_analytics_root"
+              action="action_company_knowledge_article_low_quality"
+              sequence="90"/>
+
+    <menuitem id="menu_company_knowledge_feedback_analytics"
+              name="Feedback critici"
+              parent="menu_company_knowledge_analytics_root"
+              action="action_company_knowledge_feedback_critical"
+              sequence="100"/>
+
+    <!-- CONFIGURATION -->
+    <menuitem id="menu_company_knowledge_configuration"
+              name="Configurazione"
+              parent="menu_company_knowledge_root"
+              sequence="90"
+              groups="company_knowledge_base.group_company_knowledge_manager"/>
+
+    <menuitem id="menu_company_knowledge_areas"
+              name="Reparti / Aree"
+              parent="menu_company_knowledge_configuration"
+              action="action_company_knowledge_area"
+              sequence="5"/>
+
+    <menuitem id="menu_company_knowledge_categories"
+              name="Categorie"
+              parent="menu_company_knowledge_configuration"
+              action="action_company_knowledge_category"
+              sequence="10"/>
+
+    <menuitem id="menu_company_knowledge_templates"
+              name="Template"
+              parent="menu_company_knowledge_configuration"
+              action="action_company_knowledge_template"
+              sequence="20"/>
+
+    <menuitem id="menu_company_knowledge_tags"
+              name="Tag"
+              parent="menu_company_knowledge_configuration"
+              action="action_company_knowledge_tag"
+              sequence="30"/>
+
+    <menuitem id="menu_company_knowledge_import"
+              name="Importa articoli"
+              parent="menu_company_knowledge_configuration"
+              action="action_company_knowledge_import_wizard"
+              sequence="80"/>
+
+    <menuitem id="menu_company_knowledge_settings"
+              name="Impostazioni Knowledge Base"
+              parent="menu_company_knowledge_configuration"
+              action="action_company_knowledge_open_settings"
+              sequence="90"/>
+</odoo>

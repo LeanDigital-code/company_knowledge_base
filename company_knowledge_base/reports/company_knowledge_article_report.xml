@@ -1,0 +1,170 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="action_report_company_knowledge_article_pdf" model="ir.actions.report">
+        <field name="name">Articolo Knowledge Base PDF</field>
+        <field name="model">company.knowledge.article</field>
+        <field name="report_type">qweb-pdf</field>
+        <field name="report_name">company_knowledge_base.report_company_knowledge_article_pdf</field>
+        <field name="report_file">company_knowledge_base.report_company_knowledge_article_pdf</field>
+        <field name="binding_model_id" ref="model_company_knowledge_article"/>
+        <field name="binding_type">report</field>
+        <field name="print_report_name">'Knowledge Base - %s' % (object.name or 'Articolo')</field>
+    </record>
+
+    <template id="report_company_knowledge_article_pdf">
+        <t t-call="web.html_container">
+            <t t-foreach="docs" t-as="doc">
+                <t t-call="web.external_layout">
+                    <div class="page company_knowledge_pdf_article">
+                        <style>
+                            .company_knowledge_pdf_article h1 {
+                                font-size: 28px;
+                                margin: 0 0 8px 0;
+                                color: #1f2937;
+                            }
+                            .company_knowledge_pdf_article h2 {
+                                font-size: 18px;
+                                margin: 24px 0 10px 0;
+                                padding-bottom: 6px;
+                                border-bottom: 1px solid #e5e7eb;
+                                color: #374151;
+                            }
+                            .company_knowledge_pdf_article .ckb_meta_grid {
+                                width: 100%;
+                                border-collapse: collapse;
+                                margin: 16px 0 18px 0;
+                                font-size: 12px;
+                            }
+                            .company_knowledge_pdf_article .ckb_meta_grid td {
+                                border: 1px solid #e5e7eb;
+                                padding: 8px;
+                                vertical-align: top;
+                            }
+                            .company_knowledge_pdf_article .ckb_label {
+                                display: block;
+                                font-size: 10px;
+                                color: #6b7280;
+                                text-transform: uppercase;
+                                letter-spacing: .04em;
+                                margin-bottom: 3px;
+                            }
+                            .company_knowledge_pdf_article .ckb_badge {
+                                display: inline-block;
+                                padding: 3px 8px;
+                                border-radius: 999px;
+                                background: #f3eef8;
+                                color: #5b3f7b;
+                                font-size: 11px;
+                                font-weight: 600;
+                                margin-right: 4px;
+                                margin-bottom: 4px;
+                            }
+                            .company_knowledge_pdf_article .ckb_summary {
+                                border-left: 4px solid #6f42c1;
+                                background: #fafafa;
+                                padding: 10px 12px;
+                                margin: 12px 0 18px 0;
+                                color: #374151;
+                            }
+                            .company_knowledge_pdf_article .ckb_content {
+                                font-size: 13px;
+                                line-height: 1.5;
+                            }
+                            .company_knowledge_pdf_article .ckb_footer_note {
+                                margin-top: 24px;
+                                padding-top: 10px;
+                                border-top: 1px solid #e5e7eb;
+                                font-size: 10px;
+                                color: #6b7280;
+                            }
+                        </style>
+
+                        <h1><span t-out="doc.name"/></h1>
+                        <div>
+                            <span class="ckb_badge" t-out="doc.selection_label('state')"/>
+                            <span class="ckb_badge" t-out="doc.selection_label('article_type')"/>
+                            <span class="ckb_badge" t-if="doc.quality_score != False">
+                                Qualità <span t-out="doc.quality_score"/>/100
+                            </span>
+                        </div>
+
+                        <table class="ckb_meta_grid">
+                            <tr>
+                                <td>
+                                    <span class="ckb_label">Categoria</span>
+                                    <span t-out="doc.category_id.complete_name or '-'"/>
+                                </td>
+                                <td>
+                                    <span class="ckb_label">Area/Reparto</span>
+                                    <span t-out="doc.area_id.name or '-'"/>
+                                </td>
+                                <td>
+                                    <span class="ckb_label">Versione</span>
+                                    <span t-out="doc.version_number or 1"/>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>
+                                    <span class="ckb_label">Autore</span>
+                                    <span t-out="doc.author_id.display_name or '-'"/>
+                                </td>
+                                <td>
+                                    <span class="ckb_label">Responsabile</span>
+                                    <span t-out="doc.owner_id.display_name or '-'"/>
+                                </td>
+                                <td>
+                                    <span class="ckb_label">Visibilità</span>
+                                    <span t-out="doc.selection_label('visibility')"/>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>
+                                    <span class="ckb_label">Data pubblicazione</span>
+                                    <span t-out="doc.published_date or '-'"/>
+                                </td>
+                                <td>
+                                    <span class="ckb_label">Prossima revisione</span>
+                                    <span t-out="doc.review_date or '-'"/>
+                                </td>
+                                <td>
+                                    <span class="ckb_label">Visualizzazioni</span>
+                                    <span t-out="doc.view_count or 0"/>
+                                </td>
+                            </tr>
+                        </table>
+
+                        <t t-if="doc.tag_ids">
+                            <h2>Tag</h2>
+                            <div>
+                                <span class="ckb_badge" t-foreach="doc.tag_ids" t-as="tag" t-out="tag.name"/>
+                            </div>
+                        </t>
+
+                        <t t-if="doc.summary">
+                            <h2>Sintesi</h2>
+                            <div class="ckb_summary">
+                                <span t-out="doc.summary"/>
+                            </div>
+                        </t>
+
+                        <h2>Contenuto</h2>
+                        <div class="ckb_content" t-field="doc.body_html"/>
+
+                        <t t-if="doc.attachment_ids">
+                            <h2>Allegati</h2>
+                            <ul>
+                                <li t-foreach="doc.attachment_ids" t-as="attachment">
+                                    <span t-out="attachment.name"/>
+                                </li>
+                            </ul>
+                        </t>
+
+                        <div class="ckb_footer_note">
+                            Documento generato da Company Knowledge Base. Le autorizzazioni di accesso restano gestite da Odoo.
+                        </div>
+                    </div>
+                </t>
+            </t>
+        </t>
+    </template>
+</odoo>

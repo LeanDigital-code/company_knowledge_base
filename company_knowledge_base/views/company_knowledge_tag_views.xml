@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="view_company_knowledge_tag_list" model="ir.ui.view">
+        <field name="name">company.knowledge.tag.list</field>
+        <field name="model">company.knowledge.tag</field>
+        <field name="arch" type="xml">
+            <list string="Tag Knowledge Base" editable="bottom">
+                <field name="name"/>
+                <field name="color" widget="color_picker"/>
+                <field name="active"/>
+            </list>
+        </field>
+    </record>
+
+    <record id="view_company_knowledge_tag_form" model="ir.ui.view">
+        <field name="name">company.knowledge.tag.form</field>
+        <field name="model">company.knowledge.tag</field>
+        <field name="arch" type="xml">
+            <form string="Tag Knowledge Base">
+                <sheet>
+                    <group>
+                        <field name="name"/>
+                        <field name="color" widget="color_picker"/>
+                        <field name="active"/>
+                    </group>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+    <record id="view_company_knowledge_tag_search" model="ir.ui.view">
+        <field name="name">company.knowledge.tag.search</field>
+        <field name="model">company.knowledge.tag</field>
+        <field name="arch" type="xml">
+            <search string="Cerca tag">
+                <field name="name"/>
+                <filter string="Attivi" name="active" domain="[('active', '=', True)]"/>
+                <filter string="Archiviati" name="inactive" domain="[('active', '=', False)]"/>
+            </search>
+        </field>
+    </record>
+
+    <record id="action_company_knowledge_tag" model="ir.actions.act_window">
+        <field name="name">Tag</field>
+        <field name="res_model">company.knowledge.tag</field>
+        <field name="view_mode">list,form</field>
+        <field name="search_view_id" ref="view_company_knowledge_tag_search"/>
+        <field name="context">{'search_default_active': 1}</field>
+    </record>
+</odoo>

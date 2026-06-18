@@ -1,0 +1,285 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates xml:space="preserve">
+    <t t-name="company_knowledge_base.CompanyKnowledgeDashboard" owl="1">
+        <div class="o_company_knowledge_dashboard o_action">
+            <aside class="ckb_dashboard_sidebar">
+                <div class="ckb_sidebar_top">
+                    <div class="ckb_sidebar_brand">
+                        <div class="ckb_brand_icon"><i class="fa fa-book"/></div>
+                        <div>
+                            <h2>Knowledge Base</h2>
+                            <p>Centro di navigazione</p>
+                        </div>
+                    </div>
+                    <button class="btn btn-sm btn-light ckb_icon_button" t-on-click="loadData" title="Aggiorna dati">
+                        <i class="fa fa-refresh"/>
+                    </button>
+                </div>
+
+                <section class="ckb_sidebar_block ckb_sidebar_block_search">
+                    <div class="ckb_block_title">
+                        <span class="ckb_step">1</span>
+                        <span>Cerca</span>
+                    </div>
+                    <div class="ckb_search_box">
+                        <div class="input-group input-group-sm">
+                            <input class="form-control"
+                                   placeholder="Cerca titolo, descrizione o contenuto..."
+                                   t-att-value="state.query"
+                                   t-on-input="onSearchInput"
+                                   t-on-keydown="onSearchKeydown"/>
+                            <button class="btn btn-primary" t-on-click="loadData" title="Cerca">
+                                <i class="fa fa-search"/>
+                            </button>
+                            <button class="btn btn-outline-secondary" t-on-click="clearSearch" t-if="state.query" title="Cancella ricerca">
+                                <i class="fa fa-times"/>
+                            </button>
+                        </div>
+                    </div>
+                </section>
+
+                <section class="ckb_sidebar_block">
+                    <div class="ckb_block_title">
+                        <span class="ckb_step">2</span>
+                        <span>Filtra per stato</span>
+                    </div>
+                    <div class="ckb_quick_filters">
+                        <button t-att-class="'ckb_filter_chip ' + (!state.stateFilter &amp;&amp; !state.quickFilter ? 'active' : '')"
+                                t-on-click="() => this.setStateFilter(false)">
+                            <span class="ckb_filter_main"><span class="ckb_filter_icon"><i class="fa fa-th-large"/></span><span class="ckb_filter_label">Tutti</span></span>
+                            <span class="ckb_filter_count" t-esc="state.counters.all || 0"/>
+                        </button>
+                        <button t-att-class="'ckb_filter_chip ' + (state.stateFilter === 'published' ? 'active' : '')"
+                                t-on-click="() => this.setStateFilter('published')">
+                            <span class="ckb_filter_main"><span class="ckb_filter_icon"><i class="fa fa-check-circle"/></span><span class="ckb_filter_label">Pubblicati</span></span>
+                            <span class="ckb_filter_count" t-esc="state.counters.published || 0"/>
+                        </button>
+                        <button t-att-class="'ckb_filter_chip ' + (state.stateFilter === 'review_pending' ? 'active' : '')"
+                                t-on-click="() => this.setStateFilter('review_pending')">
+                            <span class="ckb_filter_main"><span class="ckb_filter_icon"><i class="fa fa-hourglass-half"/></span><span class="ckb_filter_label">Revisione</span></span>
+                            <span class="ckb_filter_count" t-esc="state.counters.review || 0"/>
+                        </button>
+                        <button t-att-class="'ckb_filter_chip ' + (state.stateFilter === 'review_due' ? 'active' : '')"
+                                t-on-click="() => this.setStateFilter('review_due')">
+                            <span class="ckb_filter_main"><span class="ckb_filter_icon"><i class="fa fa-refresh"/></span><span class="ckb_filter_label">Da aggiornare</span></span>
+                            <span class="ckb_filter_count" t-esc="state.counters.review_due || 0"/>
+                        </button>
+                        <button t-att-class="'ckb_filter_chip ' + (state.quickFilter === 'favorites' ? 'active' : '')"
+                                t-on-click="() => this.setQuickFilter('favorites')">
+                            <span class="ckb_filter_main"><span class="ckb_filter_icon"><i class="fa fa-star"/></span><span class="ckb_filter_label">Preferiti</span></span>
+                            <span class="ckb_filter_count" t-esc="state.counters.favorites || 0"/>
+                        </button>
+                        <button t-att-class="'ckb_filter_chip ' + (state.quickFilter === 'subscribed' ? 'active' : '')"
+                                t-on-click="() => this.setQuickFilter('subscribed')">
+                            <span class="ckb_filter_main"><span class="ckb_filter_icon"><i class="fa fa-bookmark"/></span><span class="ckb_filter_label">Seguiti</span></span>
+                            <span class="ckb_filter_count" t-esc="state.counters.subscribed || 0"/>
+                        </button>
+                        <button t-att-class="'ckb_filter_chip ' + (state.quickFilter === 'low_quality' ? 'active' : '')"
+                                t-on-click="() => this.setQuickFilter('low_quality')">
+                            <span class="ckb_filter_main"><span class="ckb_filter_icon"><i class="fa fa-exclamation-triangle"/></span><span class="ckb_filter_label">Qualità bassa</span></span>
+                            <span class="ckb_filter_count" t-esc="state.counters.low_quality || 0"/>
+                        </button>
+                        <button t-att-class="'ckb_filter_chip ' + (state.quickFilter === 'recent' ? 'active' : '')"
+                                t-on-click="() => this.setQuickFilter('recent')">
+                            <span class="ckb_filter_main"><span class="ckb_filter_icon"><i class="fa fa-eye"/></span><span class="ckb_filter_label">Letti da me</span></span>
+                            <span class="ckb_filter_count" t-esc="state.counters.recent || 0"/>
+                        </button>
+                        <button t-att-class="'ckb_filter_chip ' + (state.quickFilter === 'with_attachments' ? 'active' : '')"
+                                t-on-click="() => this.setQuickFilter('with_attachments')">
+                            <span class="ckb_filter_main"><span class="ckb_filter_icon"><i class="fa fa-paperclip"/></span><span class="ckb_filter_label">Con allegati</span></span>
+                            <span class="ckb_filter_count" t-esc="state.counters.with_attachments || 0"/>
+                        </button>
+                        <button t-att-class="'ckb_filter_chip ' + (state.quickFilter === 'portal' ? 'active' : '')"
+                                t-on-click="() => this.setQuickFilter('portal')">
+                            <span class="ckb_filter_main"><span class="ckb_filter_icon"><i class="fa fa-globe"/></span><span class="ckb_filter_label">Portale</span></span>
+                            <span class="ckb_filter_count" t-esc="state.counters.portal || 0"/>
+                        </button>
+                        <button t-att-class="'ckb_filter_chip ' + (state.quickFilter === 'with_related' ? 'active' : '')"
+                                t-on-click="() => this.setQuickFilter('with_related')">
+                            <span class="ckb_filter_main"><span class="ckb_filter_icon"><i class="fa fa-link"/></span><span class="ckb_filter_label">Correlati</span></span>
+                            <span class="ckb_filter_count" t-esc="state.counters.with_related || 0"/>
+                        </button>
+                        <button t-att-class="'ckb_filter_chip ' + (state.quickFilter === 'feedback_todo' ? 'active' : '')"
+                                t-on-click="() => this.setQuickFilter('feedback_todo')">
+                            <span class="ckb_filter_main"><span class="ckb_filter_icon"><i class="fa fa-commenting-o"/></span><span class="ckb_filter_label">Feedback aperti</span></span>
+                            <span class="ckb_filter_count" t-esc="state.counters.feedback_todo || 0"/>
+                        </button>
+                        <button t-att-class="'ckb_filter_chip ' + (state.quickFilter === 'feedback_critical' ? 'active' : '')"
+                                t-on-click="() => this.setQuickFilter('feedback_critical')">
+                            <span class="ckb_filter_main"><span class="ckb_filter_icon"><i class="fa fa-exclamation-circle"/></span><span class="ckb_filter_label">Feedback critici</span></span>
+                            <span class="ckb_filter_count" t-esc="state.counters.feedback_critical || 0"/>
+                        </button>
+                    </div>
+                </section>
+
+                <section class="ckb_sidebar_block ckb_sidebar_block_sort">
+                    <div class="ckb_block_title">
+                        <span class="ckb_step">3</span>
+                        <span>Ordina risultati</span>
+                    </div>
+                    <select class="form-select form-select-sm ckb_sort_select" t-on-change="setSortBy" t-att-value="state.sortBy">
+                        <option value="updated">Aggiornati di recente</option>
+                        <option value="relevance">Rilevanza ricerca</option>
+                        <option value="popular">Più letti</option>
+                        <option value="recent">Letti da me di recente</option>
+                        <option value="quality">Qualità più bassa</option>
+                        <option value="review_date">Revisione più vicina</option>
+                        <option value="title">Titolo A-Z</option>
+                        <option value="created">Creati di recente</option>
+                    </select>
+                </section>
+
+                <section class="ckb_sidebar_block ckb_sidebar_block_categories">
+                    <div class="ckb_block_title">
+                        <span class="ckb_step">4</span>
+                        <span>Categorie</span>
+                    </div>
+                    <button t-att-class="'ckb_sidebar_item ckb_sidebar_all ' + (!state.selectedCategoryId ? 'active' : '')"
+                            t-on-click="clearCategory">
+                        <span class="ckb_sidebar_label"><i class="fa fa-folder-open-o me-1"/> Tutte le categorie</span>
+                        <span class="ckb_count" t-esc="state.counters.all || 0"/>
+                    </button>
+
+                    <div class="ckb_category_tree">
+                        <t t-foreach="state.categories" t-as="category" t-key="category.id">
+                            <button t-att-class="'ckb_sidebar_item ' + (category.selected ? 'active' : '')"
+                                    t-att-title="category.complete_name"
+                                    t-att-style="'padding-left:' + (14 + category.level * 16) + 'px;'"
+                                    t-on-click="() => this.selectCategory(category.id)">
+                                <span class="ckb_sidebar_label">
+                                    <i class="fa fa-angle-right text-muted me-1" t-if="category.level"/>
+                                    <i class="fa fa-folder-o me-1"/>
+                                    <span t-esc="category.name"/>
+                                </span>
+                                <span class="ckb_count" t-esc="category.article_count || 0"/>
+                            </button>
+                        </t>
+                    </div>
+                </section>
+            </aside>
+
+            <main class="ckb_dashboard_content">
+                <section class="ckb_page_header ckb_content_section">
+                    <div class="ckb_header_text">
+                        <span class="ckb_section_kicker">Dashboard</span>
+                        <h1>Knowledge Base Aziendale</h1>
+                        <p t-if="state.selectedCategory">
+                            Categoria selezionata: <strong t-esc="state.selectedCategory.name"/>
+                        </p>
+                        <p t-elif="state.query">
+                            Risultati ricerca per: <strong t-esc="state.query"/>
+                        </p>
+                        <p t-else="">Panoramica degli articoli accessibili in base ai tuoi permessi.</p>
+                    </div>
+                    <div class="ckb_header_actions">
+                        <button class="btn btn-outline-primary" t-on-click="openCurrentSelection">
+                            <i class="fa fa-list me-1"/> Apri elenco
+                        </button>
+                        <button class="btn btn-primary" t-on-click="() => this.openArticleList([], 'Tutti gli articoli')">
+                            <i class="fa fa-external-link me-1"/> Vista standard
+                        </button>
+                    </div>
+                </section>
+
+                <section class="ckb_content_section ckb_metrics_section">
+                    <div class="ckb_section_header">
+                        <div>
+                            <span class="ckb_section_kicker">Riepilogo</span>
+                            <h2>Indicatori principali</h2>
+                        </div>
+                        <span class="ckb_section_hint">Clicca su un indicatore per aprire la vista filtrata.</span>
+                    </div>
+                    <div class="ckb_metric_grid">
+                        <div class="ckb_metric_card" t-on-click="() => this.openArticleList([], 'Tutti gli articoli')">
+                            <span class="ckb_metric_value" t-esc="state.counters.all || 0"/>
+                            <span class="ckb_metric_label">Articoli totali</span>
+                        </div>
+                        <div class="ckb_metric_card" t-on-click="() => this.openArticleList([['state', '=', 'published']], 'Articoli pubblicati')">
+                            <span class="ckb_metric_value" t-esc="state.counters.published || 0"/>
+                            <span class="ckb_metric_label">Pubblicati</span>
+                        </div>
+                        <div class="ckb_metric_card" t-on-click="() => this.openArticleList([['state', 'in', ['review', 'changes_requested']]], 'Da revisionare / approvare')">
+                            <span class="ckb_metric_value" t-esc="state.counters.review || 0"/>
+                            <span class="ckb_metric_label">In revisione</span>
+                        </div>
+                        <div class="ckb_metric_card" t-on-click="() => this.openArticleList([['is_review_due', '=', true]], 'Scaduti / Da aggiornare')">
+                            <span class="ckb_metric_value" t-esc="state.counters.review_due || 0"/>
+                            <span class="ckb_metric_label">Da aggiornare</span>
+                        </div>
+                        <div class="ckb_metric_card" t-on-click="() => this.openArticleList([['quality_score', '&lt;', 70]], 'Qualità contenuti')">
+                            <span class="ckb_metric_value" t-esc="state.counters.low_quality || 0"/>
+                            <span class="ckb_metric_label">Qualità bassa</span>
+                        </div>
+                        <div class="ckb_metric_card" t-on-click="() => this.setQuickFilter('feedback_critical')">
+                            <span class="ckb_metric_value" t-esc="state.counters.feedback_critical || 0"/>
+                            <span class="ckb_metric_label">Feedback critici</span>
+                        </div>
+                    </div>
+                </section>
+
+                <section class="ckb_content_section ckb_article_panel">
+                    <div class="ckb_article_panel_header">
+                        <div>
+                            <span class="ckb_section_kicker">Consultazione</span>
+                            <h2>Articoli</h2>
+                        </div>
+                        <div class="ckb_article_tools">
+                            <span t-if="state.loading" class="ckb_result_count"><i class="fa fa-spinner fa-spin me-1"/> caricamento...</span>
+                            <span t-else="" class="ckb_result_count"><t t-esc="state.articles.length"/> risultati visualizzati</span>
+                            <span class="ckb_sort_badge" t-if="state.sortBy">Ordine: <t t-esc="state.sortBy"/></span>
+                        </div>
+                    </div>
+
+                    <div t-if="!state.loading &amp;&amp; !state.articles.length" class="ckb_empty_state">
+                        <i class="fa fa-search"/>
+                        <h4>Nessun articolo trovato</h4>
+                        <p>Prova a cambiare categoria, filtro o parola chiave.</p>
+                    </div>
+
+                    <div class="ckb_article_list" t-if="state.articles.length">
+                        <t t-foreach="state.articles" t-as="article" t-key="article.id">
+                            <article class="ckb_article_card" t-on-click="() => this.openArticle(article.id)">
+                                <div class="ckb_article_main">
+                                    <div class="ckb_article_title_row">
+                                        <h3 t-esc="article.name"/>
+                                        <span t-att-class="'ckb_state_badge ckb_state_' + article.state" t-esc="article.state_label"/>
+                                    </div>
+                                    <p class="ckb_article_summary" t-if="article.excerpt" t-esc="article.excerpt"/>
+                                    <div class="ckb_article_meta">
+                                        <span><i class="fa fa-folder-o me-1"/><t t-esc="article.category"/></span>
+                                        <span t-if="article.area"><i class="fa fa-sitemap me-1"/><t t-esc="article.area"/></span>
+                                        <span><i class="fa fa-eye me-1"/><t t-esc="article.view_count || 0"/> letture</span>
+                                        <span><i class="fa fa-check-circle me-1"/>Qualità <t t-esc="article.quality_score || 0"/>%</span>
+                                        <span t-if="article.attachment_count"><i class="fa fa-paperclip me-1"/><t t-esc="article.attachment_count"/> allegati</span>
+                                        <span t-if="article.portal_visible"><i class="fa fa-globe me-1"/>Portale</span>
+                                        <span t-if="article.article_link_count"><i class="fa fa-chain me-1"/><t t-esc="article.article_link_count"/> correlati</span>
+                                        <span t-if="article.feedback_todo_count"><i class="fa fa-comments-o me-1"/><t t-esc="article.feedback_todo_count"/> feedback aperti</span>
+                                        <span t-if="article.feedback_critical_count" class="text-danger"><i class="fa fa-exclamation-triangle me-1"/><t t-esc="article.feedback_critical_count"/> critici</span>
+                                        <span t-if="article.last_viewed_by_me_on"><i class="fa fa-history me-1"/>Letto da me</span>
+                                        <span t-if="article.review_date"><i class="fa fa-calendar me-1"/>Rev. <t t-esc="article.review_date"/></span>
+                                    </div>
+                                    <div class="ckb_article_tags" t-if="article.tag_names.length">
+                                        <t t-foreach="article.tag_names" t-as="tag" t-key="tag">
+                                            <span class="ckb_tag" t-esc="tag"/>
+                                        </t>
+                                    </div>
+                                    <div class="ckb_match_terms" t-if="article.matched_terms.length">
+                                        <span class="ckb_match_label">Match</span>
+                                        <t t-foreach="article.matched_terms" t-as="term" t-key="term">
+                                            <span class="ckb_match_term" t-esc="term"/>
+                                        </t>
+                                    </div>
+                                </div>
+                                <div class="ckb_article_flags">
+                                    <i class="fa fa-star" title="Preferito" t-if="article.is_favorite"/>
+                                    <i class="fa fa-bell" title="Seguito" t-if="article.is_subscribed_by_me"/>
+                                    <i class="fa fa-check-square-o" title="Richiede conferma" t-if="article.requires_acknowledgement"/>
+                                </div>
+                            </article>
+                        </t>
+                    </div>
+                </section>
+            </main>
+        </div>
+    </t>
+</templates>

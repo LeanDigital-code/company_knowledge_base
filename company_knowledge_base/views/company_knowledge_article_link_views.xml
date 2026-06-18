@@ -1,0 +1,81 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="view_company_knowledge_article_link_list" model="ir.ui.view">
+        <field name="name">company.knowledge.article.link.list</field>
+        <field name="model">company.knowledge.article.link</field>
+        <field name="arch" type="xml">
+            <list string="Articoli correlati" default_order="article_id, sequence, relation_type">
+                <field name="sequence" widget="handle"/>
+                <field name="article_id"/>
+                <field name="relation_type"/>
+                <field name="related_article_id"/>
+                <field name="related_state" widget="badge" optional="show"/>
+                <field name="related_category_id" optional="show"/>
+                <field name="related_quality_score" optional="hide"/>
+                <field name="note" optional="show"/>
+                <field name="active" column_invisible="True"/>
+            </list>
+        </field>
+    </record>
+
+    <record id="view_company_knowledge_article_link_form" model="ir.ui.view">
+        <field name="name">company.knowledge.article.link.form</field>
+        <field name="model">company.knowledge.article.link</field>
+        <field name="arch" type="xml">
+            <form string="Articolo correlato">
+                <header>
+                    <button name="action_open_related_article" type="object" string="Apri articolo" class="oe_highlight"/>
+                    <button name="action_create_reverse_link" type="object" string="Crea collegamento inverso"/>
+                </header>
+                <sheet>
+                    <group>
+                        <group>
+                            <field name="article_id"/>
+                            <field name="relation_type"/>
+                            <field name="sequence"/>
+                            <field name="active"/>
+                        </group>
+                        <group>
+                            <field name="related_article_id" domain="[('id', '!=', article_id)]"/>
+                            <field name="related_state" readonly="1"/>
+                            <field name="related_category_id" readonly="1"/>
+                            <field name="related_quality_score" readonly="1"/>
+                        </group>
+                    </group>
+                    <group>
+                        <field name="note" placeholder="Spiega perché gli articoli sono collegati..."/>
+                    </group>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+    <record id="view_company_knowledge_article_link_search" model="ir.ui.view">
+        <field name="name">company.knowledge.article.link.search</field>
+        <field name="model">company.knowledge.article.link</field>
+        <field name="arch" type="xml">
+            <search string="Cerca articoli correlati">
+                <field name="article_id"/>
+                <field name="related_article_id"/>
+                <field name="relation_type"/>
+                <field name="related_category_id"/>
+                <filter string="Attivi" name="active" domain="[('active', '=', True)]"/>
+                <filter string="Archiviati" name="inactive" domain="[('active', '=', False)]"/>
+                <group expand="0" string="Raggruppa per">
+                    <filter string="Articolo origine" name="group_article" context="{'group_by': 'article_id'}"/>
+                    <filter string="Articolo collegato" name="group_related" context="{'group_by': 'related_article_id'}"/>
+                    <filter string="Tipo relazione" name="group_relation_type" context="{'group_by': 'relation_type'}"/>
+                    <filter string="Categoria collegata" name="group_related_category" context="{'group_by': 'related_category_id'}"/>
+                </group>
+            </search>
+        </field>
+    </record>
+
+    <record id="action_company_knowledge_article_link" model="ir.actions.act_window">
+        <field name="name">Articoli correlati</field>
+        <field name="res_model">company.knowledge.article.link</field>
+        <field name="view_mode">list,form</field>
+        <field name="search_view_id" ref="view_company_knowledge_article_link_search"/>
+        <field name="context">{'search_default_active': 1}</field>
+    </record>
+</odoo>

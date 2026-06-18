@@ -1,0 +1,83 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="view_company_knowledge_subscription_list" model="ir.ui.view">
+        <field name="name">company.knowledge.subscription.list</field>
+        <field name="model">company.knowledge.subscription</field>
+        <field name="arch" type="xml">
+            <list string="Articoli seguiti" decoration-muted="not active">
+                <field name="article_id"/>
+                <field name="user_id"/>
+                <field name="notification_level"/>
+                <field name="subscribed_on"/>
+                <field name="last_notified_on"/>
+                <field name="active"/>
+            </list>
+        </field>
+    </record>
+
+    <record id="view_company_knowledge_subscription_form" model="ir.ui.view">
+        <field name="name">company.knowledge.subscription.form</field>
+        <field name="model">company.knowledge.subscription</field>
+        <field name="arch" type="xml">
+            <form string="Iscrizione articolo">
+                <header>
+                    <button name="action_open_article" type="object" string="Apri articolo" icon="fa-external-link"/>
+                    <button name="action_unsubscribe" type="object" string="Non seguire più" icon="fa-bell-slash" invisible="not active"/>
+                </header>
+                <sheet>
+                    <group>
+                        <group>
+                            <field name="article_id"/>
+                            <field name="user_id"/>
+                            <field name="notification_level"/>
+                        </group>
+                        <group>
+                            <field name="subscribed_on" readonly="1"/>
+                            <field name="last_notified_on" readonly="1"/>
+                            <field name="active"/>
+                        </group>
+                    </group>
+                    <group>
+                        <field name="note"/>
+                    </group>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+    <record id="view_company_knowledge_subscription_search" model="ir.ui.view">
+        <field name="name">company.knowledge.subscription.search</field>
+        <field name="model">company.knowledge.subscription</field>
+        <field name="arch" type="xml">
+            <search string="Cerca iscrizioni">
+                <field name="article_id"/>
+                <field name="user_id"/>
+                <field name="notification_level"/>
+                <filter string="Mie iscrizioni" name="my_subscriptions" domain="[('user_id', '=', uid)]"/>
+                <filter string="Attive" name="active_only" domain="[('active', '=', True)]"/>
+                <filter string="Archiviate" name="inactive" domain="[('active', '=', False)]"/>
+                <group expand="0" string="Raggruppa per">
+                    <filter string="Articolo" name="group_article" context="{'group_by': 'article_id'}"/>
+                    <filter string="Utente" name="group_user" context="{'group_by': 'user_id'}"/>
+                    <filter string="Livello notifiche" name="group_level" context="{'group_by': 'notification_level'}"/>
+                </group>
+            </search>
+        </field>
+    </record>
+
+    <record id="action_company_knowledge_subscription" model="ir.actions.act_window">
+        <field name="name">Articoli seguiti</field>
+        <field name="res_model">company.knowledge.subscription</field>
+        <field name="view_mode">list,form</field>
+        <field name="search_view_id" ref="view_company_knowledge_subscription_search"/>
+        <field name="context">{'search_default_active_only': 1}</field>
+    </record>
+
+    <record id="action_company_knowledge_subscription_my" model="ir.actions.act_window">
+        <field name="name">Articoli che seguo</field>
+        <field name="res_model">company.knowledge.subscription</field>
+        <field name="view_mode">list,form</field>
+        <field name="domain">[('user_id', '=', uid), ('active', '=', True)]</field>
+        <field name="search_view_id" ref="view_company_knowledge_subscription_search"/>
+    </record>
+</odoo>

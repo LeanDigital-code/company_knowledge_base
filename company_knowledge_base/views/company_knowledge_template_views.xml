@@ -1,0 +1,98 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="view_company_knowledge_template_list" model="ir.ui.view">
+        <field name="name">company.knowledge.template.list</field>
+        <field name="model">company.knowledge.template</field>
+        <field name="arch" type="xml">
+            <list string="Template Knowledge Base" editable="bottom">
+                <field name="sequence" widget="handle"/>
+                <field name="name"/>
+                <field name="article_type"/>
+                <field name="category_id"/>
+                <field name="tag_ids" widget="many2many_tags" optional="show"/>
+                <field name="quality_check_enabled" optional="show"/>
+                <field name="min_body_length" optional="hide"/>
+                <field name="active" optional="hide"/>
+            </list>
+        </field>
+    </record>
+
+    <record id="view_company_knowledge_template_form" model="ir.ui.view">
+        <field name="name">company.knowledge.template.form</field>
+        <field name="model">company.knowledge.template</field>
+        <field name="arch" type="xml">
+            <form string="Template Knowledge Base">
+                <header>
+                    <button name="action_create_article_from_template" type="object" string="Crea articolo" class="oe_highlight"/>
+                </header>
+                <sheet>
+                    <div class="oe_title">
+                        <label for="name"/>
+                        <h1><field name="name" placeholder="Nome template..."/></h1>
+                    </div>
+                    <group>
+                        <group>
+                            <field name="sequence"/>
+                            <field name="article_type"/>
+                            <field name="category_id"/>
+                        </group>
+                        <group>
+                            <field name="tag_ids" widget="many2many_tags" options="{'color_field': 'color'}"/>
+                            <field name="active"/>
+                        </group>
+                    </group>
+                    <notebook>
+                        <page string="Sintesi">
+                            <field name="summary" placeholder="Sintesi predefinita del contenuto..."/>
+                        </page>
+                        <page string="Struttura contenuto">
+                            <field name="body_html" widget="html" placeholder="Struttura HTML del template..."/>
+                        </page>
+                        <page string="Regole qualità">
+                            <group>
+                                <group>
+                                    <field name="quality_check_enabled"/>
+                                    <field name="min_body_length" invisible="not quality_check_enabled"/>
+                                </group>
+                                <group invisible="not quality_check_enabled">
+                                    <field name="requires_summary"/>
+                                    <field name="requires_tags"/>
+                                    <field name="requires_attachments"/>
+                                </group>
+                            </group>
+                            <field name="required_section_keywords" placeholder="Una voce per riga: Scopo, Responsabili, Procedura, Controlli..." invisible="not quality_check_enabled"/>
+                        </page>
+                    </notebook>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+    <record id="view_company_knowledge_template_search" model="ir.ui.view">
+        <field name="name">company.knowledge.template.search</field>
+        <field name="model">company.knowledge.template</field>
+        <field name="arch" type="xml">
+            <search string="Cerca template">
+                <field name="name"/>
+                <field name="article_type"/>
+                <field name="category_id"/>
+                <field name="tag_ids"/>
+                <filter string="Attivi" name="active" domain="[('active', '=', True)]"/>
+                <filter string="Controllo qualità" name="quality_check_enabled" domain="[('quality_check_enabled', '=', True)]"/>
+                <filter string="Archiviati" name="inactive" domain="[('active', '=', False)]"/>
+                <group expand="0" string="Raggruppa per">
+                    <filter string="Tipo" name="group_type" context="{'group_by': 'article_type'}"/>
+                    <filter string="Categoria" name="group_category" context="{'group_by': 'category_id'}"/>
+                </group>
+            </search>
+        </field>
+    </record>
+
+    <record id="action_company_knowledge_template" model="ir.actions.act_window">
+        <field name="name">Template</field>
+        <field name="res_model">company.knowledge.template</field>
+        <field name="view_mode">list,form</field>
+        <field name="search_view_id" ref="view_company_knowledge_template_search"/>
+        <field name="context">{'search_default_active': 1}</field>
+    </record>
+</odoo>

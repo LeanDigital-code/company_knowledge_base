@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="view_company_knowledge_notify_wizard_form" model="ir.ui.view">
+        <field name="name">company.knowledge.notify.wizard.form</field>
+        <field name="model">company.knowledge.notify.wizard</field>
+        <field name="arch" type="xml">
+            <form string="Notifica utenti">
+                <sheet>
+                    <group>
+                        <field name="article_id" readonly="1"/>
+                        <field name="notification_type"/>
+                        <field name="message" widget="html"/>
+                    </group>
+                    <group string="Destinatari">
+                        <group>
+                            <field name="user_ids" widget="many2many_tags"/>
+                            <field name="group_ids" widget="many2many_tags"/>
+                            <field name="area_ids" widget="many2many_tags"/>
+                        </group>
+                        <group>
+                            <field name="include_subscribers"/>
+                            <field name="include_author_owner"/>
+                            <field name="require_acknowledgement"/>
+                        </group>
+                    </group>
+                    <group string="Attività" col="2">
+                        <field name="create_activity"/>
+                        <field name="activity_deadline" invisible="not create_activity"/>
+                    </group>
+                </sheet>
+                <footer>
+                    <button string="Invia notifica" type="object" name="action_notify" class="btn-primary"/>
+                    <button string="Annulla" special="cancel" class="btn-secondary"/>
+                </footer>
+            </form>
+        </field>
+    </record>
+
+    <record id="action_company_knowledge_notify_wizard" model="ir.actions.act_window">
+        <field name="name">Notifica utenti</field>
+        <field name="res_model">company.knowledge.notify.wizard</field>
+        <field name="view_mode">form</field>
+        <field name="target">new</field>
+    </record>
+</odoo>

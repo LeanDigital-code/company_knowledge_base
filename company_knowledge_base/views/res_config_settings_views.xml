@@ -1,0 +1,68 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="view_company_knowledge_settings_wizard_form" model="ir.ui.view">
+        <field name="name">company.knowledge.settings.wizard.form</field>
+        <field name="model">company.knowledge.settings.wizard</field>
+        <field name="arch" type="xml">
+            <form string="Impostazioni Knowledge Base" create="false" delete="false" edit="true">
+                <sheet>
+                    <field name="name" invisible="1"/>
+                    <div class="oe_title">
+                        <h1>Impostazioni Knowledge Base</h1>
+                        <p class="text-muted">
+                            Configura revisioni, notifiche, qualità contenuti e gestione feedback del modulo Knowledge Base.
+                        </p>
+                    </div>
+
+                    <group string="Revisione periodica" col="2">
+                        <group>
+                            <field name="review_activity_enabled"/>
+                        </group>
+                        <group>
+                            <field name="review_activity_days_before" invisible="not review_activity_enabled"/>
+                        </group>
+                    </group>
+
+                    <group string="Notifiche" col="2">
+                        <group>
+                            <field name="auto_notify_on_publish"/>
+                        </group>
+                        <group>
+                            <field name="auto_notify_on_update"/>
+                        </group>
+                    </group>
+
+                    <group string="Qualità contenuti" col="2">
+                        <group>
+                            <field name="enforce_quality_on_review"/>
+                        </group>
+                        <group>
+                            <field name="quality_min_score"/>
+                        </group>
+                    </group>
+
+                    <group string="Feedback e miglioramento continuo" col="2">
+                        <group>
+                            <field name="feedback_activity_enabled"/>
+                        </group>
+                        <group>
+                            <field name="feedback_activity_days" invisible="not feedback_activity_enabled"/>
+                        </group>
+                    </group>
+                </sheet>
+
+                <footer>
+                    <button string="Salva impostazioni" type="object" name="action_save" class="btn-primary"/>
+                    <button string="Annulla" special="cancel" class="btn-secondary"/>
+                </footer>
+            </form>
+        </field>
+    </record>
+
+    <record id="action_company_knowledge_open_settings" model="ir.actions.server">
+        <field name="name">Impostazioni Knowledge Base</field>
+        <field name="model_id" ref="model_company_knowledge_settings_wizard"/>
+        <field name="state">code</field>
+        <field name="code">action = model.action_open_settings()</field>
+    </record>
+</odoo>

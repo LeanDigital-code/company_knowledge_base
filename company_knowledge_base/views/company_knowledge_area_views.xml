@@ -1,0 +1,82 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="view_company_knowledge_area_list" model="ir.ui.view">
+        <field name="name">company.knowledge.area.list</field>
+        <field name="model">company.knowledge.area</field>
+        <field name="arch" type="xml">
+            <list string="Reparti / Aree Knowledge Base" default_order="sequence, name">
+                <field name="sequence" widget="handle"/>
+                <field name="name"/>
+                <field name="code"/>
+                <field name="user_count"/>
+                <field name="article_count"/>
+                <field name="active" column_invisible="True"/>
+            </list>
+        </field>
+    </record>
+
+    <record id="view_company_knowledge_area_form" model="ir.ui.view">
+        <field name="name">company.knowledge.area.form</field>
+        <field name="model">company.knowledge.area</field>
+        <field name="arch" type="xml">
+            <form string="Reparto / Area Knowledge Base">
+                <sheet>
+                    <div class="oe_button_box" name="button_box">
+                        <button name="action_open_articles" type="object" class="oe_stat_button" icon="fa-file-text-o">
+                            <field name="article_count" widget="statinfo" string="Articoli"/>
+                        </button>
+                    </div>
+                    <group>
+                        <group>
+                            <field name="name"/>
+                            <field name="code"/>
+                            <field name="sequence"/>
+                            <field name="active"/>
+                        </group>
+                        <group>
+                            <field name="user_count" readonly="1"/>
+                            <field name="article_count" readonly="1"/>
+                        </group>
+                    </group>
+                    <notebook>
+                        <page string="Descrizione">
+                            <field name="description" placeholder="Descrivi ambito, responsabilità e confini dell’area..."/>
+                        </page>
+                        <page string="Utenti">
+                            <group>
+                                <field name="user_ids" widget="many2many_tags"/>
+                                <field name="manager_ids" widget="many2many_tags"/>
+                            </group>
+                        </page>
+                        <page string="Categorie">
+                            <field name="category_ids" widget="many2many_tags"/>
+                        </page>
+                    </notebook>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+    <record id="view_company_knowledge_area_search" model="ir.ui.view">
+        <field name="name">company.knowledge.area.search</field>
+        <field name="model">company.knowledge.area</field>
+        <field name="arch" type="xml">
+            <search string="Cerca reparti / aree">
+                <field name="name"/>
+                <field name="code"/>
+                <field name="user_ids"/>
+                <field name="manager_ids"/>
+                <filter string="Attive" name="active" domain="[('active', '=', True)]"/>
+                <filter string="Archiviate" name="inactive" domain="[('active', '=', False)]"/>
+            </search>
+        </field>
+    </record>
+
+    <record id="action_company_knowledge_area" model="ir.actions.act_window">
+        <field name="name">Reparti / Aree</field>
+        <field name="res_model">company.knowledge.area</field>
+        <field name="view_mode">list,form</field>
+        <field name="search_view_id" ref="view_company_knowledge_area_search"/>
+        <field name="context">{'search_default_active': 1}</field>
+    </record>
+</odoo>

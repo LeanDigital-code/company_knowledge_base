@@ -1,0 +1,58 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="view_company_knowledge_view_log_list" model="ir.ui.view">
+        <field name="name">company.knowledge.view.log.list</field>
+        <field name="model">company.knowledge.view.log</field>
+        <field name="arch" type="xml">
+            <list string="Letture Knowledge Base" create="false" edit="false">
+                <field name="last_viewed_on"/>
+                <field name="article_id"/>
+                <field name="user_id"/>
+                <field name="view_count"/>
+            </list>
+        </field>
+    </record>
+
+    <record id="view_company_knowledge_view_log_form" model="ir.ui.view">
+        <field name="name">company.knowledge.view.log.form</field>
+        <field name="model">company.knowledge.view.log</field>
+        <field name="arch" type="xml">
+            <form string="Registro lettura" create="false" edit="false">
+                <sheet>
+                    <group>
+                        <field name="article_id" readonly="1"/>
+                        <field name="user_id" readonly="1"/>
+                        <field name="last_viewed_on" readonly="1"/>
+                        <field name="view_count" readonly="1"/>
+                    </group>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+    <record id="view_company_knowledge_view_log_search" model="ir.ui.view">
+        <field name="name">company.knowledge.view.log.search</field>
+        <field name="model">company.knowledge.view.log</field>
+        <field name="arch" type="xml">
+            <search string="Cerca letture">
+                <field name="article_id"/>
+                <field name="user_id"/>
+                <filter string="Le mie letture" name="my_views" domain="[('user_id', '=', uid)]"/>
+                <filter string="Oggi" name="today" domain="[('last_viewed_on', '&gt;=', context_today().strftime('%Y-%m-%d 00:00:00'))]"/>
+                <group expand="0" string="Raggruppa per">
+                    <filter string="Utente" name="group_user" context="{'group_by': 'user_id'}"/>
+                    <filter string="Articolo" name="group_article" context="{'group_by': 'article_id'}"/>
+                    <filter string="Mese" name="group_month" context="{'group_by': 'last_viewed_on:month'}"/>
+                </group>
+            </search>
+        </field>
+    </record>
+
+    <record id="action_company_knowledge_view_log" model="ir.actions.act_window">
+        <field name="name">Letture</field>
+        <field name="res_model">company.knowledge.view.log</field>
+        <field name="view_mode">list,form</field>
+        <field name="search_view_id" ref="view_company_knowledge_view_log_search"/>
+        <field name="context">{'search_default_my_views': 1}</field>
+    </record>
+</odoo>

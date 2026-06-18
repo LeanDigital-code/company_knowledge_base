@@ -1,0 +1,109 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <template id="company_knowledge_public_layout" name="Company Knowledge Public Layout">
+        <html>
+            <head>
+                <meta charset="utf-8"/>
+                <meta name="viewport" content="width=device-width, initial-scale=1"/>
+                <title><t t-out="title or 'Knowledge Base'"/></title>
+                <style>
+                    body { font-family: Arial, sans-serif; margin: 0; background: #f6f7f9; color: #1f2933; }
+                    .kb-header { background: #1f2937; color: white; padding: 24px 32px; }
+                    .kb-header a { color: white; text-decoration: none; }
+                    .kb-container { max-width: 1040px; margin: 0 auto; padding: 24px; }
+                    .kb-card { background: white; border: 1px solid #e5e7eb; border-radius: 12px; padding: 18px; margin-bottom: 16px; box-shadow: 0 1px 2px rgba(0,0,0,.04); }
+                    .kb-card h2, .kb-card h1 { margin-top: 0; }
+                    .kb-muted { color: #6b7280; font-size: 14px; }
+                    .kb-tags span { display: inline-block; background: #eef2ff; border-radius: 999px; padding: 3px 10px; margin: 4px 4px 0 0; font-size: 12px; }
+                    .kb-search { display: flex; gap: 8px; margin-bottom: 20px; }
+                    .kb-search input, .kb-search select { padding: 10px; border: 1px solid #d1d5db; border-radius: 8px; flex: 1; }
+                    .kb-search button { padding: 10px 16px; border: 0; border-radius: 8px; background: #1f2937; color: white; cursor: pointer; }
+                    .kb-content img { max-width: 100%; height: auto; }
+                    .kb-back { display: inline-block; margin-bottom: 16px; }
+                    .kb-related { margin-top: 20px; }
+                    .kb-related ul { padding-left: 20px; }
+                    .kb-relation-type { color: #6b7280; font-size: 12px; text-transform: uppercase; letter-spacing: .04em; }
+                </style>
+            </head>
+            <body>
+                <div class="kb-header">
+                    <div class="kb-container">
+                        <a href="/company_knowledge"><h1>Knowledge Base</h1></a>
+                    </div>
+                </div>
+                <div class="kb-container">
+                    <t t-out="0"/>
+                </div>
+            </body>
+        </html>
+    </template>
+
+    <template id="company_knowledge_public_index" name="Company Knowledge Public Index">
+        <t t-call="company_knowledge_base.company_knowledge_public_layout">
+            <t t-set="title">Knowledge Base</t>
+            <form class="kb-search" action="/company_knowledge" method="get">
+                <input type="text" name="search" placeholder="Cerca nella knowledge base..." t-att-value="search"/>
+                <select name="category_id">
+                    <option value="">Tutte le categorie</option>
+                    <t t-foreach="categories" t-as="category">
+                        <option t-att-value="category.id" t-att-selected="category.id == category_id">
+                            <t t-out="category.display_name"/>
+                        </option>
+                    </t>
+                </select>
+                <button type="submit">Cerca</button>
+            </form>
+            <t t-if="not articles">
+                <div class="kb-card">
+                    <h2>Nessun articolo disponibile</h2>
+                    <p class="kb-muted">Non ci sono articoli pubblicati per il portale oppure la ricerca non ha prodotto risultati.</p>
+                </div>
+            </t>
+            <t t-foreach="articles" t-as="article">
+                <article class="kb-card">
+                    <h2><a t-att-href="'/company_knowledge/article/%s' % article.id"><t t-out="article.name"/></a></h2>
+                    <p class="kb-muted">
+                        <t t-out="article.category_id.display_name"/> · <t t-out="article.published_date or ''"/>
+                    </p>
+                    <p t-if="article.summary"><t t-out="article.summary"/></p>
+                    <div class="kb-tags" t-if="article.tag_ids">
+                        <t t-foreach="article.tag_ids" t-as="tag"><span><t t-out="tag.name"/></span></t>
+                    </div>
+                </article>
+            </t>
+        </t>
+    </template>
+
+    <template id="company_knowledge_public_article" name="Company Knowledge Public Article">
+        <t t-call="company_knowledge_base.company_knowledge_public_layout">
+            <t t-set="title"><t t-out="article.name"/></t>
+            <a class="kb-back" href="/company_knowledge">← Torna alla knowledge base</a>
+            <article class="kb-card">
+                <h1><t t-out="article.name"/></h1>
+                <p class="kb-muted">
+                    <t t-out="article.category_id.display_name"/> · Versione <t t-out="article.version_number"/>
+                    <t t-if="article.published_date"> · Pubblicato il <t t-out="article.published_date"/></t>
+                </p>
+                <p t-if="article.summary"><strong><t t-out="article.summary"/></strong></p>
+                <div class="kb-tags" t-if="article.tag_ids">
+                    <t t-foreach="article.tag_ids" t-as="tag"><span><t t-out="tag.name"/></span></t>
+                </div>
+                <hr/>
+                <div class="kb-content" t-raw="article.body_html"/>
+                <div class="kb-related" t-if="related_links">
+                    <hr/>
+                    <h2>Articoli correlati</h2>
+                    <ul>
+                        <t t-foreach="related_links" t-as="link">
+                            <li>
+                                <span class="kb-relation-type"><t t-out="dict(link._fields['relation_type'].selection).get(link.relation_type)"/></span>
+                                · <a t-att-href="'/company_knowledge/article/%s' % link.related_article_id.id"><t t-out="link.related_article_id.name"/></a>
+                                <span t-if="link.note"> — <t t-out="link.note"/></span>
+                            </li>
+                        </t>
+                    </ul>
+                </div>
+            </article>
+        </t>
+    </template>
+</odoo>

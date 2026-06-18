@@ -1,0 +1,96 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="view_company_knowledge_article_version_list" model="ir.ui.view">
+        <field name="name">company.knowledge.article.version.list</field>
+        <field name="model">company.knowledge.article.version</field>
+        <field name="arch" type="xml">
+            <list string="Versioni articoli" create="false" edit="false" delete="false">
+                <button name="action_compare_with_another_version" type="object" string="Confronta" icon="fa-code-fork"/>
+                <field name="create_date" string="Data"/>
+                <field name="article_id"/>
+                <field name="version_number"/>
+                <field name="title"/>
+                <field name="article_type" optional="show"/>
+                <field name="area_id" optional="hide"/>
+                <field name="template_id" optional="hide"/>
+                <field name="snapshot_state_value"/>
+                <field name="review_date" optional="hide"/>
+                <field name="requires_acknowledgement" optional="hide"/>
+                <field name="created_by_id"/>
+                <field name="change_note"/>
+            </list>
+        </field>
+    </record>
+
+    <record id="view_company_knowledge_article_version_form" model="ir.ui.view">
+        <field name="name">company.knowledge.article.version.form</field>
+        <field name="model">company.knowledge.article.version</field>
+        <field name="arch" type="xml">
+            <form string="Versione articolo" create="false" edit="false" delete="false">
+                <header>
+                    <button name="action_restore_version" type="object" string="Ripristina versione" class="oe_highlight" groups="company_knowledge_base.group_company_knowledge_manager"/>
+                    <button name="action_compare_with_another_version" type="object" string="Confronta con altra versione" icon="fa-code-fork"/>
+                </header>
+                <sheet>
+                    <group>
+                        <group>
+                            <field name="article_id" readonly="1"/>
+                            <field name="version_number" readonly="1"/>
+                            <field name="snapshot_state_value" readonly="1"/>
+                            <field name="article_type" readonly="1"/>
+                            <field name="template_id" readonly="1"/>
+                        </group>
+                        <group>
+                            <field name="created_by_id" readonly="1"/>
+                            <field name="create_date" readonly="1"/>
+                            <field name="change_note" readonly="1"/>
+                            <field name="review_date" readonly="1"/>
+                            <field name="requires_acknowledgement" readonly="1"/>
+                        </group>
+                    </group>
+                    <group>
+                        <field name="title" readonly="1"/>
+                        <field name="category_id" readonly="1"/>
+                        <field name="area_id" readonly="1"/>
+                        <field name="tag_ids" widget="many2many_tags" readonly="1"/>
+                    </group>
+                    <notebook>
+                        <page string="Descrizione breve">
+                            <field name="summary" readonly="1"/>
+                        </page>
+                        <page string="Contenuto">
+                            <field name="body_html" widget="html" readonly="1"/>
+                        </page>
+                    </notebook>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+    <record id="view_company_knowledge_article_version_search" model="ir.ui.view">
+        <field name="name">company.knowledge.article.version.search</field>
+        <field name="model">company.knowledge.article.version</field>
+        <field name="arch" type="xml">
+            <search string="Cerca versioni">
+                <field name="article_id"/>
+                <field name="title"/>
+                <field name="created_by_id"/>
+                <field name="area_id"/>
+                <filter string="Oggi" name="today" domain="[('create_date', '&gt;=', context_today().strftime('%Y-%m-%d 00:00:00'))]"/>
+                <group expand="0" string="Raggruppa per">
+                    <filter string="Articolo" name="group_article" context="{'group_by': 'article_id'}"/>
+                    <filter string="Autore modifica" name="group_created_by" context="{'group_by': 'created_by_id'}"/>
+                    <filter string="Stato snapshot" name="group_state" context="{'group_by': 'snapshot_state_value'}"/>
+                    <filter string="Area/Reparto" name="group_area" context="{'group_by': 'area_id'}"/>
+                </group>
+            </search>
+        </field>
+    </record>
+
+    <record id="action_company_knowledge_article_version" model="ir.actions.act_window">
+        <field name="name">Versioni</field>
+        <field name="res_model">company.knowledge.article.version</field>
+        <field name="view_mode">list,form</field>
+        <field name="search_view_id" ref="view_company_knowledge_article_version_search"/>
+    </record>
+</odoo>

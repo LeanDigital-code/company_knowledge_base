@@ -1,0 +1,72 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="view_company_knowledge_workflow_log_list" model="ir.ui.view">
+        <field name="name">company.knowledge.workflow.log.list</field>
+        <field name="model">company.knowledge.workflow.log</field>
+        <field name="arch" type="xml">
+            <list string="Storico workflow" create="0" edit="0" delete="0">
+                <field name="date"/>
+                <field name="article_id"/>
+                <field name="action"/>
+                <field name="from_state"/>
+                <field name="to_state"/>
+                <field name="user_id"/>
+                <field name="note" optional="show"/>
+            </list>
+        </field>
+    </record>
+
+    <record id="view_company_knowledge_workflow_log_form" model="ir.ui.view">
+        <field name="name">company.knowledge.workflow.log.form</field>
+        <field name="model">company.knowledge.workflow.log</field>
+        <field name="arch" type="xml">
+            <form string="Evento workflow" create="0" edit="0" delete="0">
+                <sheet>
+                    <group>
+                        <group>
+                            <field name="article_id"/>
+                            <field name="action"/>
+                            <field name="date"/>
+                            <field name="user_id"/>
+                        </group>
+                        <group>
+                            <field name="from_state"/>
+                            <field name="to_state"/>
+                        </group>
+                    </group>
+                    <group string="Nota / motivazione">
+                        <field name="note" nolabel="1"/>
+                    </group>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+    <record id="view_company_knowledge_workflow_log_search" model="ir.ui.view">
+        <field name="name">company.knowledge.workflow.log.search</field>
+        <field name="model">company.knowledge.workflow.log</field>
+        <field name="arch" type="xml">
+            <search string="Cerca storico workflow">
+                <field name="article_id"/>
+                <field name="action"/>
+                <field name="user_id"/>
+                <filter string="Richieste modifica" name="request_changes" domain="[('action', '=', 'request_changes')]"/>
+                <filter string="Pubblicazioni" name="publish" domain="[('action', '=', 'publish')]"/>
+                <group expand="0" string="Raggruppa per">
+                    <filter string="Azione" name="group_action" context="{'group_by': 'action'}"/>
+                    <filter string="Articolo" name="group_article" context="{'group_by': 'article_id'}"/>
+                    <filter string="Utente" name="group_user" context="{'group_by': 'user_id'}"/>
+                    <filter string="Mese" name="group_month" context="{'group_by': 'date:month'}"/>
+                </group>
+            </search>
+        </field>
+    </record>
+
+    <record id="action_company_knowledge_workflow_log" model="ir.actions.act_window">
+        <field name="name">Storico workflow</field>
+        <field name="res_model">company.knowledge.workflow.log</field>
+        <field name="view_mode">list,form</field>
+        <field name="search_view_id" ref="view_company_knowledge_workflow_log_search"/>
+        <field name="context">{'search_default_group_action': 1}</field>
+    </record>
+</odoo>

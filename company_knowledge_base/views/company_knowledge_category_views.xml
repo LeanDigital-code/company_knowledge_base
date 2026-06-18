@@ -1,0 +1,89 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="view_company_knowledge_category_list" model="ir.ui.view">
+        <field name="name">company.knowledge.category.list</field>
+        <field name="model">company.knowledge.category</field>
+        <field name="arch" type="xml">
+            <list string="Categorie Knowledge Base" default_order="sequence, complete_name">
+                <field name="sequence" widget="handle"/>
+                <field name="complete_name"/>
+                <field name="parent_id"/>
+                <field name="visibility"/>
+                <field name="allowed_area_ids" widget="many2many_tags" optional="hide"/>
+                <field name="article_count"/>
+                <field name="active" column_invisible="True"/>
+            </list>
+        </field>
+    </record>
+
+    <record id="view_company_knowledge_category_form" model="ir.ui.view">
+        <field name="name">company.knowledge.category.form</field>
+        <field name="model">company.knowledge.category</field>
+        <field name="arch" type="xml">
+            <form string="Categoria Knowledge Base">
+                <sheet>
+                    <div class="oe_button_box" name="button_box">
+                        <button name="action_open_articles" type="object" class="oe_stat_button" icon="fa-file-text-o">
+                            <field name="article_count" widget="statinfo" string="Articoli"/>
+                        </button>
+                    </div>
+                    <group>
+                        <group>
+                            <field name="name"/>
+                            <field name="parent_id"/>
+                            <field name="sequence"/>
+                            <field name="active"/>
+                        </group>
+                        <group>
+                            <field name="visibility"/>
+                            <field name="allowed_group_ids" widget="many2many_tags" invisible="visibility != 'groups'"/>
+                            <field name="allowed_area_ids" widget="many2many_tags" invisible="visibility != 'areas'"/>
+                        </group>
+                    </group>
+                    <notebook>
+                        <page string="Descrizione">
+                            <field name="description" placeholder="Descrivi lo scopo della categoria..."/>
+                        </page>
+                        <page string="Sottocategorie">
+                            <field name="child_ids" context="{'default_parent_id': id}">
+                                <list editable="bottom">
+                                    <field name="sequence" widget="handle"/>
+                                    <field name="name"/>
+                                    <field name="visibility"/>
+                                </list>
+                            </field>
+                        </page>
+                    </notebook>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+    <record id="view_company_knowledge_category_search" model="ir.ui.view">
+        <field name="name">company.knowledge.category.search</field>
+        <field name="model">company.knowledge.category</field>
+        <field name="arch" type="xml">
+            <search string="Cerca categorie">
+                <field name="name"/>
+                <field name="complete_name"/>
+                <filter string="Attive" name="active" domain="[('active', '=', True)]"/>
+                <filter string="Archiviate" name="inactive" domain="[('active', '=', False)]"/>
+                <separator/>
+                <filter string="Riservate a gruppi" name="restricted" domain="[('visibility', '=', 'groups')]"/>
+                <filter string="Riservate ad aree" name="restricted_areas" domain="[('visibility', '=', 'areas')]"/>
+                <group expand="0" string="Raggruppa per">
+                    <filter string="Categoria padre" name="group_parent" context="{'group_by': 'parent_id'}"/>
+                    <filter string="Visibilità" name="group_visibility" context="{'group_by': 'visibility'}"/>
+                </group>
+            </search>
+        </field>
+    </record>
+
+    <record id="action_company_knowledge_category" model="ir.actions.act_window">
+        <field name="name">Categorie</field>
+        <field name="res_model">company.knowledge.category</field>
+        <field name="view_mode">list,form</field>
+        <field name="search_view_id" ref="view_company_knowledge_category_search"/>
+        <field name="context">{'search_default_active': 1}</field>
+    </record>
+</odoo>

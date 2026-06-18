@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="view_company_knowledge_version_compare_wizard_form" model="ir.ui.view">
+        <field name="name">company.knowledge.version.compare.wizard.form</field>
+        <field name="model">company.knowledge.version.compare.wizard</field>
+        <field name="arch" type="xml">
+            <form string="Confronta versioni">
+                <sheet>
+                    <group>
+                        <field name="article_id" readonly="1"/>
+                    </group>
+                    <group>
+                        <group>
+                            <field name="left_version_id" options="{'no_create': True, 'no_create_edit': True}"/>
+                        </group>
+                        <group>
+                            <field name="right_version_id" options="{'no_create': True, 'no_create_edit': True}"/>
+                        </group>
+                    </group>
+                    <group>
+                        <field name="compare_scope"/>
+                        <field name="diff_generated" readonly="1" invisible="1"/>
+                    </group>
+                    <button name="action_compare" type="object" string="Genera confronto" class="oe_highlight"/>
+                    <group invisible="not diff_generated">
+                        <field name="diff_html" readonly="1" nolabel="1" widget="html"/>
+                    </group>
+                </sheet>
+                <footer>
+                    <button name="action_restore_left_version" type="object" string="Ripristina versione precedente" groups="company_knowledge_base.group_company_knowledge_manager" invisible="not diff_generated"/>
+                    <button name="action_restore_right_version" type="object" string="Ripristina versione successiva" groups="company_knowledge_base.group_company_knowledge_manager" invisible="not diff_generated"/>
+                    <button string="Chiudi" class="btn-secondary" special="cancel"/>
+                </footer>
+            </form>
+        </field>
+    </record>
+
+    <record id="action_company_knowledge_version_compare_wizard" model="ir.actions.act_window">
+        <field name="name">Confronta versioni</field>
+        <field name="res_model">company.knowledge.version.compare.wizard</field>
+        <field name="view_mode">form</field>
+        <field name="target">new</field>
+    </record>
+</odoo>
